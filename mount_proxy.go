@@ -295,9 +295,22 @@ func (self *ProxyMount) openWithType(name string, req *http.Request, requestBody
 		// perform the request
 		// -----------------------------------------------------------------------------------------
 		log.Debugf("[%s] proxy: sending request to %s://%s", id, newReq.URL.Scheme, newReq.URL.Host)
-		var reqStartAt = time.Now()
-		response, err := self.Client.Do(newReq)
-		log.Debugf("[%s] proxy: responded in %v", id, time.Since(reqStartAt))
+
+		var err error
+		var response *http.Response
+
+		for i := 0; i < 3; i++ {
+			var reqStartAt = time.Now()
+			response, err = self.Client.Do(newReq)
+			log.Debugf("[%s] proxy: responded in %v", id, time.Since(reqStartAt))
+			if err != nil {
+				log.Errorf("[%s] proxy: sending request to failed %s://%s", id, newReq.URL.Scheme, newReq.URL.Host)
+				log.Errorf("[%s] proxy: mounting request error on attempt %d: %v", id, i+1, err)
+				continue // retry.
+			}
+
+			break // no error.
+		}
 
 		if err == nil {
 			if response.Body != nil {
