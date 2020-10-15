@@ -304,8 +304,10 @@ func (self *ProxyMount) openWithType(name string, req *http.Request, requestBody
 			response, err = self.Client.Do(newReq)
 			log.Debugf("[%s] proxy: responded in %v", id, time.Since(reqStartAt))
 			if err != nil {
+				attempt := i + 1
 				log.Errorf("[%s] proxy: sending request to failed %s://%s", id, newReq.URL.Scheme, newReq.URL.Host)
-				log.Errorf("[%s] proxy: mounting request error on attempt %d: %v", id, i+1, err)
+				log.Errorf("[%s] proxy: mounting request error on attempt %d: %v", id, attempt, err)
+				time.Sleep(time.Duration(attempt) * time.Second)
 				continue // retry.
 			}
 
@@ -398,6 +400,7 @@ func (self *ProxyMount) openWithType(name string, req *http.Request, requestBody
 				return nil, MountHaltErr
 			}
 		} else {
+			log.Errorf("[%s] proxy: all attempts failed: %v", id, err)
 			return nil, err
 		}
 	} else {
