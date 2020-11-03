@@ -300,6 +300,15 @@ func (self *ProxyMount) openWithType(name string, req *http.Request, requestBody
 		var response *http.Response
 
 		for i := 0; i < 3; i++ {
+
+			// buffer the request body because we need to repeatedly pass it if request fails.
+			if data, err := ioutil.ReadAll(newReq.Body); err == nil {
+				body := bytes.NewReader(data)
+				newReq.Body = ioutil.NopCloser(body)
+			} else {
+				log.Errorf("[%s] proxy: failed to copy request body for %s://%s", id, newReq.URL.Scheme, newReq.URL.Host)
+			}
+
 			var reqStartAt = time.Now()
 			response, err = self.Client.Do(newReq)
 			log.Debugf("[%s] proxy: responded in %v", id, time.Since(reqStartAt))
@@ -307,7 +316,7 @@ func (self *ProxyMount) openWithType(name string, req *http.Request, requestBody
 				attempt := i + 1
 				log.Errorf("[%s] proxy: sending request to failed %s://%s", id, newReq.URL.Scheme, newReq.URL.Host)
 				log.Errorf("[%s] proxy: mounting request error on attempt %d: %v", id, attempt, err)
-				time.Sleep(time.Duration(attempt) * time.Second)
+				time.Sleep(time.Duration(attempt*3) * time.Second)
 				continue // retry.
 			}
 
