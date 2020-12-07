@@ -196,7 +196,15 @@ func (self *ProxyMount) openWithType(name string, req *http.Request, requestBody
 		}
 	}
 
-	if newReq, err := http.NewRequest(method, proxyURI, nil); err == nil {
+	// main error on retries.
+	var errm error
+
+	for i := 0; i < 3; i++ {
+		newReq, err := http.NewRequest(method, proxyURI, nil)
+		if err != nil {
+			return nil, err
+		}
+
 		if pp := self.StripPathPrefix; pp != `` {
 			newReq.URL.Path = strings.TrimPrefix(newReq.URL.Path, pp)
 		}
@@ -296,125 +304,107 @@ func (self *ProxyMount) openWithType(name string, req *http.Request, requestBody
 		// -----------------------------------------------------------------------------------------
 		log.Debugf("[%s] proxy: sending request to %s://%s", id, newReq.URL.Scheme, newReq.URL.Host)
 
-		var err error
-		var response *http.Response
+		var reqStartAt = time.Now()
+		response, err := self.Client.Do(newReq)
 
-		for i := 0; i < 3; i++ {
+		if err != nil {
+			// save error to be returned as last error.
+			errm = err
+			attempt := i + 1
+			log.Errorf("[%s] proxy: sending request to failed %s://%s", id, newReq.URL.Scheme, newReq.URL.Host)
+			log.Errorf("[%s] proxy: mounting request error on attempt %d: %v", id, attempt, err)
+			time.Sleep(time.Duration(attempt*3) * time.Second)
+			continue // retry.
+		}
+		log.Debugf("[%s] proxy: responded in %v", id, time.Since(reqStartAt))
 
-			// buffer the request body because we need to repeatedly pass it if request fails.
-			if data, err := ioutil.ReadAll(newReq.Body); err == nil {
-				body := bytes.NewReader(data)
-				newReq.Body = ioutil.NopCloser(body)
-			} else {
-				log.Errorf("[%s] proxy: failed to copy request body for %s://%s", id, newReq.URL.Scheme, newReq.URL.Host)
-			}
-
-			var reqStartAt = time.Now()
-			response, err = self.Client.Do(newReq)
-			log.Debugf("[%s] proxy: responded in %v", id, time.Since(reqStartAt))
-			if err != nil {
-				attempt := i + 1
-				log.Errorf("[%s] proxy: sending request to failed %s://%s", id, newReq.URL.Scheme, newReq.URL.Host)
-				log.Errorf("[%s] proxy: mounting request error on attempt %d: %v", id, attempt, err)
-				time.Sleep(time.Duration(attempt*3) * time.Second)
-				continue // retry.
-			}
-
-			break // no error.
+		if response.Body != nil {
+			defer response.Body.Close()
 		}
 
-		if err == nil {
-			if response.Body != nil {
-				defer response.Body.Close()
-			}
-
-			// add explicit response headers to response
-			for name, value := range self.ResponseHeaders {
-				response.Header.Set(name, typeutil.String(value))
-			}
-
-			// override the response status code (if specified)
-			if self.ResponseCode > 0 {
-				response.StatusCode = self.ResponseCode
-			}
-
-			// provide a header redirect if so requested
-			if response.StatusCode < 400 && self.RedirectOnSuccess != `` {
-				if response.StatusCode < 300 {
-					response.StatusCode = http.StatusTemporaryRedirect
-				}
-
-				response.Header.Set(`Location`, self.RedirectOnSuccess)
-			}
-
-			log.Debugf("[%s] proxy: HTTP %v", id, response.Status)
-			log.Debugf("[%s] proxy: \u256d%s response headers", id, strings.Repeat("\u2500", 56))
-
-			for hdr := range maputil.M(response.Header).Iter(maputil.IterOptions{
-				SortKeys: true,
-			}) {
-				log.Debugf("[%s] proxy: \u2502 ${blue}%v${reset}: %v", id, hdr.K, stringutil.Elide(strings.Join(hdr.V.Strings(), ` `), 72, `…`))
-			}
-
-			log.Debugf("[%s] proxy: \u2570%s end response headers", id, strings.Repeat("\u2500", 56))
-
-			log.Infof(
-				"[%s] proxy: %s responded with: %v (Content-Length: %v)",
-				id,
-				to,
-				response.Status,
-				response.ContentLength,
-			)
-
-			if response.StatusCode < 400 || self.PassthroughErrors {
-				var responseBody io.Reader
-
-				if body, err := httputil.DecodeResponse(response); err == nil {
-					responseBody = body
-
-					// whatever the encoding was before, it's definitely "identity" now
-					response.Header.Set(`Content-Encoding`, `identity`)
-				} else {
-					return nil, err
-				}
-
-				if data, err := ioutil.ReadAll(responseBody); err == nil {
-					var payload = bytes.NewReader(data)
-
-					// correct the length, which is now potentially decompressed and longer
-					// than the original response claims
-					response.Header.Set(`Content-Length`, typeutil.String(payload.Size()))
-
-					var mountResponse = NewMountResponse(name, payload.Size(), payload)
-					mountResponse.StatusCode = response.StatusCode
-					mountResponse.ContentType = response.Header.Get(`Content-Type`)
-
-					for k, v := range response.Header {
-						mountResponse.Metadata[k] = strings.Join(v, `,`)
-					}
-
-					return mountResponse, nil
-				} else {
-					return nil, fmt.Errorf("proxy response: %v", err)
-				}
-			} else {
-				if data, err := ioutil.ReadAll(response.Body); err == nil {
-					for _, line := range stringutil.SplitLines(data, "\n") {
-						log.Debugf("[%s] proxy: [B] %s", id, line)
-					}
-				}
-
-				log.Debugf("[%s] proxy: %s %s: %s", id, method, newReq.URL, response.Status)
-
-				return nil, MountHaltErr
-			}
-		} else {
-			log.Errorf("[%s] proxy: all attempts failed: %v", id, err)
-			return nil, err
+		// add explicit response headers to response
+		for name, value := range self.ResponseHeaders {
+			response.Header.Set(name, typeutil.String(value))
 		}
-	} else {
-		return nil, err
+
+		// override the response status code (if specified)
+		if self.ResponseCode > 0 {
+			response.StatusCode = self.ResponseCode
+		}
+
+		// provide a header redirect if so requested
+		if response.StatusCode < 400 && self.RedirectOnSuccess != `` {
+			if response.StatusCode < 300 {
+				response.StatusCode = http.StatusTemporaryRedirect
+			}
+
+			response.Header.Set(`Location`, self.RedirectOnSuccess)
+		}
+
+		log.Debugf("[%s] proxy: HTTP %v", id, response.Status)
+		log.Debugf("[%s] proxy: \u256d%s response headers", id, strings.Repeat("\u2500", 56))
+
+		for hdr := range maputil.M(response.Header).Iter(maputil.IterOptions{
+			SortKeys: true,
+		}) {
+			log.Debugf("[%s] proxy: \u2502 ${blue}%v${reset}: %v", id, hdr.K, stringutil.Elide(strings.Join(hdr.V.Strings(), ` `), 72, `…`))
+		}
+
+		log.Debugf("[%s] proxy: \u2570%s end response headers", id, strings.Repeat("\u2500", 56))
+
+		log.Infof(
+			"[%s] proxy: %s responded with: %v (Content-Length: %v)",
+			id,
+			to,
+			response.Status,
+			response.ContentLength,
+		)
+
+		if response.StatusCode < 400 || self.PassthroughErrors {
+			var responseBody io.Reader
+
+			if body, err := httputil.DecodeResponse(response); err == nil {
+				responseBody = body
+
+				// whatever the encoding was before, it's definitely "identity" now
+				response.Header.Set(`Content-Encoding`, `identity`)
+			} else {
+				return nil, err
+			}
+
+			if data, err := ioutil.ReadAll(responseBody); err == nil {
+				var payload = bytes.NewReader(data)
+
+				// correct the length, which is now potentially decompressed and longer
+				// than the original response claims
+				response.Header.Set(`Content-Length`, typeutil.String(payload.Size()))
+
+				var mountResponse = NewMountResponse(name, payload.Size(), payload)
+				mountResponse.StatusCode = response.StatusCode
+				mountResponse.ContentType = response.Header.Get(`Content-Type`)
+
+				for k, v := range response.Header {
+					mountResponse.Metadata[k] = strings.Join(v, `,`)
+				}
+
+				return mountResponse, nil
+			} else {
+				return nil, fmt.Errorf("proxy response: %v", err)
+			}
+		}
+
+		if data, err := ioutil.ReadAll(response.Body); err == nil {
+			for _, line := range stringutil.SplitLines(data, "\n") {
+				log.Debugf("[%s] proxy: [B] %s", id, line)
+			}
+		}
+		log.Debugf("[%s] proxy: %s %s: %s", id, method, newReq.URL, response.Status)
+		return nil, MountHaltErr
 	}
+
+	// we are here because retries failed.
+	log.Errorf("[%s] proxy: all attempts failed: %v", id, errm)
+	return nil, errm
 }
 
 func (self *ProxyMount) url() string {
