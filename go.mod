@@ -21,7 +21,7 @@ require (
 	github.com/jbenet/go-base58 v0.0.0-20150317085156-6237cf65f3a6
 	github.com/kelvins/sunrisesunset v0.0.0-20170601204625-14f1915ad4b4
 	github.com/kyokomi/emoji v2.1.0+incompatible
-	github.com/lucas-clemente/quic-go v0.17.1
+	github.com/lucas-clemente/quic-go v0.19.3
 	github.com/mattn/go-shellwords v1.0.9
 	github.com/microcosm-cc/bluemonday v1.0.1
 	github.com/montanaflynn/stats v0.0.0-20151014174947-eeaced052adb
@@ -35,10 +35,10 @@ require (
 	github.com/uber/jaeger-lib v2.2.0+incompatible // indirect
 	github.com/yosssi/gohtml v0.0.0-20180130040904-97fbf36f4aa8
 	go.uber.org/atomic v1.6.0 // indirect
-	golang.org/x/net v0.0.0-20200324143707-d3edc9973b7e
+	golang.org/x/net v0.0.0-20200707034311-ab3426394381
 	golang.org/x/oauth2 v0.0.0-20190226205417-e64efc72b421
-	golang.org/x/text v0.3.1-0.20180807135948-17ff2d5776d2
-	gopkg.in/yaml.v2 v2.2.4
+	golang.org/x/text v0.3.2
+	gopkg.in/yaml.v2 v2.3.0
 )
 
 go 1.12
