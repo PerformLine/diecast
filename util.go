@@ -19,7 +19,7 @@ import (
 )
 
 func bugWarning() {
-	log.Warningf("BUG: no timer associated with request. Please report this at https://github.com/ghetzel/diecast")
+	log.Warningf("BUG: no timer associated with request. Please report this at https://github.com/PerformLine/diecast")
 }
 
 type xmlNode struct {

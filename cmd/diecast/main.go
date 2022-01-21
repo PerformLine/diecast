@@ -13,7 +13,7 @@ import (
 	"time"
 
 	"github.com/ghetzel/cli"
-	"github.com/ghetzel/diecast"
+	"github.com/PerformLine/diecast"
 	"github.com/ghetzel/go-stockutil/log"
 	"github.com/ghetzel/go-stockutil/maputil"
 	"github.com/ghetzel/go-stockutil/netutil"
