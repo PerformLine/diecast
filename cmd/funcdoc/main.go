@@ -11,7 +11,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/ghetzel/diecast"
+	"github.com/PerformLine/diecast"
 	"github.com/ghetzel/go-stockutil/rxutil"
 	"github.com/ghetzel/go-stockutil/typeutil"
 )
