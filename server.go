@@ -39,7 +39,7 @@ import (
 	"github.com/PerformLine/go-stockutil/stringutil"
 	"github.com/PerformLine/go-stockutil/timeutil"
 	"github.com/PerformLine/go-stockutil/typeutil"
-	"github.com/ahmedash95/ratelimit"
+	"github.com/PerformLine/ratelimit"
 	"github.com/gobwas/glob"
 	"github.com/husobee/vestigo"
 	"github.com/lucas-clemente/quic-go/http3"

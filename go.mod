@@ -3,12 +3,12 @@ module github.com/PerformLine/diecast
 require (
 	github.com/PerformLine/go-stockutil v1.9.0
 	github.com/PerformLine/go-webfriend v0.12.0
+	github.com/PerformLine/ratelimit v1.1.0
 	github.com/PuerkitoBio/goquery v1.5.0
 	github.com/alecthomas/chroma v0.7.3
 	github.com/alicebob/miniredis v2.5.0+incompatible
 	github.com/biessek/golang-ico v0.0.0-20180326222316-d348d9ea4670
 	github.com/dustin/go-humanize v1.0.0
-	github.com/ghetzel/ratelimit v0.0.0-20200513232932-b28727c55ae1
 	github.com/ghodss/yaml v1.0.0
 	github.com/go-shiori/go-readability v0.0.0-20200413080041-05caea5f6592
 	github.com/gobwas/glob v0.2.3
