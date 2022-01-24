@@ -30,14 +30,14 @@ github.com/Microsoft/go-winio v0.5.1/go.mod h1:JPGBdM1cNvN/6ISo+n8V5iA4v8pBzdOpz
 github.com/NYTimes/gziphandler v0.0.0-20170623195520-56545f4a5d46/go.mod h1:3wb06e3pkSAbeQ52E9H9iFoQsEEwGN64994WTCIhntQ=
 github.com/PerformLine/argonaut v0.2.0 h1:DA83mTz/etP1WDmjMGUABU4nCczM00D0SbCwBsbObUk=
 github.com/PerformLine/argonaut v0.2.0/go.mod h1:ICLwSlyy87LbPuBG1uBQ5kejzr4RUOsEjsCu24vK/Vs=
-github.com/PerformLine/diecast v1.21.3/go.mod h1:ezA2lG8tTMWEPIrWIz0+xPQRN4crz/we7gE0W6d1+kA=
+github.com/PerformLine/diecast v1.21.4/go.mod h1:siyFcW//wDklokPOvl9OWmruANRRWbYOUjxDVewjze4=
 github.com/PerformLine/friendscript v0.9.0 h1:8YRZeGFO5PK8ZD944VgU9lXJox/rFKovkLubaP4F9bk=
 github.com/PerformLine/friendscript v0.9.0/go.mod h1:M2QRpUlc5OeTdzbJWaU70G/z3IF4781eC5mWngTIR3k=
-github.com/PerformLine/go-stockutil v1.9.0 h1:Yuf4RS/s5eJu7EgvBUdu0IbLuCr45/XKOs8zLLDdfwo=
 github.com/PerformLine/go-stockutil v1.9.0/go.mod h1:jyShWnJwYLETUL/+5nA1L9j93tdVnSSvr2BDPzh6D5Y=
-github.com/PerformLine/go-webfriend v0.12.5/go.mod h1:83V98+RR8meIzilHtRyUGUkNvtzRowqKzEahxv3x40o=
-github.com/PerformLine/go-webfriend v0.12.6 h1:IvufQEsphD8XV6mke2xZ7UwExcjLrSOtLBnAnEJH474=
-github.com/PerformLine/go-webfriend v0.12.6/go.mod h1:tsB6kH6oCXWNb7IDpuStzECee588GEAfLzHJ6wiOx28=
+github.com/PerformLine/go-stockutil v1.9.1 h1:SBk3hyVorWZuBJJwGlbAsa4mobQfL186ynLFxSvIOsw=
+github.com/PerformLine/go-stockutil v1.9.1/go.mod h1:5q6vMehWI4uoWOjq1Y4sdMwpoI1O4R0oNO8oqiHJErI=
+github.com/PerformLine/go-webfriend v0.12.7 h1:tBJvmiQwhA+jz/baeBlIt70mPdntUn0gJr1O7br9YyY=
+github.com/PerformLine/go-webfriend v0.12.7/go.mod h1:0y/CsvetQVOmRJTnMrVZFxmjfRNwNWl+X7Dp1aLGXM4=
 github.com/PerformLine/ratelimit v1.1.0 h1:pMdwUldipEkMLs41hgaGsVNhHbg7U95Vs2LBBUQFNYQ=
 github.com/PerformLine/ratelimit v1.1.0/go.mod h1:w3HK1Qx+CUHFeQp7S+F42hLKSGhBZCotcE93ce8EYgE=
 github.com/PuerkitoBio/goquery v1.5.0 h1:uGvmFXOA73IKluu/F84Xd1tt/z07GYm8X49XKHP7EJk=
@@ -226,7 +226,6 @@ github.com/jbenet/go-base58 v0.0.0-20150317085156-6237cf65f3a6 h1:4zOlv2my+vf98j
 github.com/jbenet/go-base58 v0.0.0-20150317085156-6237cf65f3a6/go.mod h1:r/8JmuR0qjuCiEhAolkfvdZgmPiHTnJaG0UXCSeR1Zo=
 github.com/jdkato/prose v1.1.0 h1:LpvmDGwbKGTgdCH3a8VJL56sr7p/wOFPw/R4lM4PfFg=
 github.com/jdkato/prose v1.1.0/go.mod h1:jkF0lkxaX5PFSlk9l4Gh9Y+T57TqUZziWT7uZbW5ADg=
-github.com/jdxcode/netrc v0.0.0-20180207092346-e1a19c977509/go.mod h1:PSWm5RA4GUQ+cyCXiBIIUjlDWdJci5cU3GVKwaQRmW8=
 github.com/jdxcode/netrc v0.0.0-20210204082910-926c7f70242a h1:d4+I1YEKVmWZrgkt6jpXBnLgV2ZjO0YxEtLDdfIZfH4=
 github.com/jdxcode/netrc v0.0.0-20210204082910-926c7f70242a/go.mod h1:Zi/ZFkEqFHTm7qkjyNJjaWH4LQA9LQhGJyF0lTYGpxw=
 github.com/jellevandenhooff/dkim v0.0.0-20150330215556-f50fe3d243e1/go.mod h1:E0B/fFc00Y+Rasa88328GlI/XbtyysCtTHZS8h7IrBU=
@@ -651,6 +650,7 @@ honnef.co/go/tools v0.0.0-20190106161140-3f1c8253044a/go.mod h1:rf3lG4BRIbNafJWh
 k8s.io/api v0.17.0 h1:H9d/lw+VkZKEVIUc8F3wgiQ+FUXTTr21M87jXLU7yqM=
 k8s.io/api v0.17.0/go.mod h1:npsyOePkeP0CPwyGfXDHxvypiYMJxBWAMpQxCaJ4ZxI=
 k8s.io/apimachinery v0.17.0/go.mod h1:b9qmWdKlLuU9EBh+06BtLcSf/Mu89rWL33naRxs1uZg=
+k8s.io/apimachinery v0.17.3/go.mod h1:gxLnyZcGNdZTCLnq3fgzyg2A5BVCHTNDFrw8AmuJ+0g=
 k8s.io/apimachinery v0.18.6 h1:RtFHnfGNfd1N0LeSrKCUznz5xtUP1elRGvHJbL3Ntag=
 k8s.io/apimachinery v0.18.6/go.mod h1:OaXp26zu/5J7p0f92ASynJa1pZo06YlV9fG7BoWbCko=
 k8s.io/client-go v0.17.0 h1:8QOGvUGdqDMFrm9sD6IUFl256BcffynGoe80sxgTEDg=
