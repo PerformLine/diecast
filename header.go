@@ -1,8 +1,8 @@
 package diecast
 
 import (
-	"github.com/ghetzel/go-stockutil/maputil"
-	"github.com/ghetzel/go-stockutil/sliceutil"
+	"github.com/PerformLine/go-stockutil/maputil"
+	"github.com/PerformLine/go-stockutil/sliceutil"
 )
 
 type Redirect struct {

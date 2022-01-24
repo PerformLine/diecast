@@ -3,7 +3,7 @@ package diecast
 import (
 	"net/http"
 
-	"github.com/ghetzel/go-stockutil/typeutil"
+	"github.com/PerformLine/go-stockutil/typeutil"
 	"github.com/husobee/vestigo"
 )
 

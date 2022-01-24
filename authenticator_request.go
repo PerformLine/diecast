@@ -7,10 +7,10 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/ghetzel/go-stockutil/httputil"
-	"github.com/ghetzel/go-stockutil/log"
-	"github.com/ghetzel/go-stockutil/sliceutil"
-	"github.com/ghetzel/go-stockutil/typeutil"
+	"github.com/PerformLine/go-stockutil/httputil"
+	"github.com/PerformLine/go-stockutil/log"
+	"github.com/PerformLine/go-stockutil/sliceutil"
+	"github.com/PerformLine/go-stockutil/typeutil"
 )
 
 type RequestAuthenticator struct {

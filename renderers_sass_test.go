@@ -8,8 +8,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/ghetzel/go-stockutil/typeutil"
-	"github.com/ghetzel/testify/require"
+	"github.com/PerformLine/go-stockutil/typeutil"
+	"github.com/stretchr/testify/require"
 )
 
 func TestSassRenderer(t *testing.T) {

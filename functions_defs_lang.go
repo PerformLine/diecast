@@ -6,7 +6,7 @@ import (
 
 	"github.com/alecthomas/chroma/lexers"
 	"github.com/alecthomas/chroma/quick"
-	"github.com/ghetzel/go-stockutil/typeutil"
+	"github.com/PerformLine/go-stockutil/typeutil"
 )
 
 var HighlightTheme = `monokai`

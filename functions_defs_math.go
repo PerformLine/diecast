@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"math"
 
-	"github.com/ghetzel/go-stockutil/mathutil"
-	"github.com/ghetzel/go-stockutil/sliceutil"
-	"github.com/ghetzel/go-stockutil/stringutil"
-	"github.com/ghetzel/go-stockutil/typeutil"
+	"github.com/PerformLine/go-stockutil/mathutil"
+	"github.com/PerformLine/go-stockutil/sliceutil"
+	"github.com/PerformLine/go-stockutil/stringutil"
+	"github.com/PerformLine/go-stockutil/typeutil"
 	"github.com/montanaflynn/stats"
 )
 

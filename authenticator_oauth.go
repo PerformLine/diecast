@@ -8,8 +8,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/ghetzel/go-stockutil/httputil"
-	"github.com/ghetzel/go-stockutil/stringutil"
+	"github.com/PerformLine/go-stockutil/httputil"
+	"github.com/PerformLine/go-stockutil/stringutil"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/amazon"
 	"golang.org/x/oauth2/facebook"

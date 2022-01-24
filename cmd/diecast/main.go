@@ -12,14 +12,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ghetzel/cli"
+	"github.com/urfave/cli"
 	"github.com/PerformLine/diecast"
-	"github.com/ghetzel/go-stockutil/log"
-	"github.com/ghetzel/go-stockutil/maputil"
-	"github.com/ghetzel/go-stockutil/netutil"
-	"github.com/ghetzel/go-stockutil/sliceutil"
-	"github.com/ghetzel/go-stockutil/stringutil"
-	"github.com/ghetzel/go-stockutil/typeutil"
+	"github.com/PerformLine/go-stockutil/log"
+	"github.com/PerformLine/go-stockutil/maputil"
+	"github.com/PerformLine/go-stockutil/netutil"
+	"github.com/PerformLine/go-stockutil/sliceutil"
+	"github.com/PerformLine/go-stockutil/stringutil"
+	"github.com/PerformLine/go-stockutil/typeutil"
 	yaml "gopkg.in/yaml.v2"
 )
 

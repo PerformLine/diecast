@@ -9,12 +9,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ghetzel/go-stockutil/httputil"
-	"github.com/ghetzel/go-stockutil/log"
-	"github.com/ghetzel/go-stockutil/sliceutil"
-	"github.com/ghetzel/go-stockutil/stringutil"
-	"github.com/ghetzel/go-stockutil/timeutil"
-	"github.com/ghetzel/go-stockutil/typeutil"
+	"github.com/PerformLine/go-stockutil/httputil"
+	"github.com/PerformLine/go-stockutil/log"
+	"github.com/PerformLine/go-stockutil/sliceutil"
+	"github.com/PerformLine/go-stockutil/stringutil"
+	"github.com/PerformLine/go-stockutil/timeutil"
+	"github.com/PerformLine/go-stockutil/typeutil"
 )
 
 var DefaultActionStepTimeout = 10 * time.Second

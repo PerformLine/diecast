@@ -6,10 +6,10 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/ghetzel/go-stockutil/maputil"
-	"github.com/ghetzel/go-stockutil/sliceutil"
-	"github.com/ghetzel/go-stockutil/stringutil"
-	"github.com/ghetzel/go-stockutil/typeutil"
+	"github.com/PerformLine/go-stockutil/maputil"
+	"github.com/PerformLine/go-stockutil/sliceutil"
+	"github.com/PerformLine/go-stockutil/stringutil"
+	"github.com/PerformLine/go-stockutil/typeutil"
 )
 
 // [type=process] Process the output of the previous step by performing a sequence of discrete

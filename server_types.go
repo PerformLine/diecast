@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/ghetzel/go-stockutil/typeutil"
+	"github.com/PerformLine/go-stockutil/typeutil"
 )
 
 func kvValues(kv []KV) (values []interface{}) {

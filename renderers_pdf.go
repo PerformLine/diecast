@@ -10,12 +10,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ghetzel/go-stockutil/httputil"
-	"github.com/ghetzel/go-stockutil/log"
-	"github.com/ghetzel/go-webfriend"
-	"github.com/ghetzel/go-webfriend/browser"
-	wfcore "github.com/ghetzel/go-webfriend/commands/core"
-	wfpage "github.com/ghetzel/go-webfriend/commands/page"
+	"github.com/PerformLine/go-stockutil/httputil"
+	"github.com/PerformLine/go-stockutil/log"
+	"github.com/PerformLine/go-webfriend"
+	"github.com/PerformLine/go-webfriend/browser"
+	wfcore "github.com/PerformLine/go-webfriend/commands/core"
+	wfpage "github.com/PerformLine/go-webfriend/commands/page"
 )
 
 type PdfRenderer struct {
