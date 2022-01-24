@@ -3,7 +3,7 @@ package diecast
 import (
 	"net/http"
 
-	"github.com/ghetzel/go-stockutil/maputil"
+	"github.com/PerformLine/go-stockutil/maputil"
 )
 
 // [type=respond] Configure the HTTP response headers and status.

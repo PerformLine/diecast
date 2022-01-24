@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/ghetzel/go-stockutil/colorutil"
-	"github.com/ghetzel/go-stockutil/typeutil"
+	"github.com/PerformLine/go-stockutil/colorutil"
+	"github.com/PerformLine/go-stockutil/typeutil"
 	"github.com/spaolacci/murmur3"
 )
 

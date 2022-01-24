@@ -12,9 +12,9 @@ import (
 	text "text/template"
 	"text/template/parse"
 
-	"github.com/ghetzel/go-stockutil/log"
-	"github.com/ghetzel/go-stockutil/rxutil"
-	"github.com/ghetzel/go-stockutil/stringutil"
+	"github.com/PerformLine/go-stockutil/log"
+	"github.com/PerformLine/go-stockutil/rxutil"
+	"github.com/PerformLine/go-stockutil/stringutil"
 )
 
 type Engine int

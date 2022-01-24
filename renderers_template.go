@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/ghetzel/go-stockutil/log"
+	"github.com/PerformLine/go-stockutil/log"
 	"github.com/ghodss/yaml"
 )
 

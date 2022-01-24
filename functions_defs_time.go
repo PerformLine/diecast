@@ -6,9 +6,9 @@ import (
 	"time"
 	"unicode"
 
-	"github.com/ghetzel/go-stockutil/stringutil"
-	"github.com/ghetzel/go-stockutil/timeutil"
-	"github.com/ghetzel/go-stockutil/typeutil"
+	"github.com/PerformLine/go-stockutil/stringutil"
+	"github.com/PerformLine/go-stockutil/timeutil"
+	"github.com/PerformLine/go-stockutil/typeutil"
 )
 
 func loadStandardFunctionsTime(funcs FuncMap, server *Server) funcGroup {

@@ -10,8 +10,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ghetzel/go-stockutil/maputil"
-	"github.com/ghetzel/go-stockutil/typeutil"
+	"github.com/PerformLine/go-stockutil/maputil"
+	"github.com/PerformLine/go-stockutil/typeutil"
 )
 
 type Protocol interface {

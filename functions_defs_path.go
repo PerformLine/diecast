@@ -8,10 +8,10 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/ghetzel/go-stockutil/fileutil"
-	"github.com/ghetzel/go-stockutil/pathutil"
-	"github.com/ghetzel/go-stockutil/sliceutil"
-	"github.com/ghetzel/go-stockutil/stringutil"
+	"github.com/PerformLine/go-stockutil/fileutil"
+	"github.com/PerformLine/go-stockutil/pathutil"
+	"github.com/PerformLine/go-stockutil/sliceutil"
+	"github.com/PerformLine/go-stockutil/stringutil"
 )
 
 func loadStandardFunctionsPath(funcs FuncMap, server *Server) funcGroup {

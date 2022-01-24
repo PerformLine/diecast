@@ -5,9 +5,9 @@ import (
 	"os"
 	"strings"
 
-	"github.com/ghetzel/go-stockutil/maputil"
-	"github.com/ghetzel/go-stockutil/sliceutil"
-	"github.com/ghetzel/go-stockutil/stringutil"
+	"github.com/PerformLine/go-stockutil/maputil"
+	"github.com/PerformLine/go-stockutil/sliceutil"
+	"github.com/PerformLine/go-stockutil/stringutil"
 )
 
 func loadStandardFunctionsIntrospection(funcs FuncMap, server *Server) funcGroup {

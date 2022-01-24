@@ -12,8 +12,8 @@ import (
 	"strings"
 
 	"github.com/PerformLine/diecast"
-	"github.com/ghetzel/go-stockutil/rxutil"
-	"github.com/ghetzel/go-stockutil/typeutil"
+	"github.com/PerformLine/go-stockutil/rxutil"
+	"github.com/PerformLine/go-stockutil/typeutil"
 )
 
 var rxFnDocString = `//\s*fn\s*(?P<func>[^:]+):\s*(?P<docstring>.*)`

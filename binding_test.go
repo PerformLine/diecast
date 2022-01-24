@@ -8,10 +8,10 @@ import (
 	"testing"
 
 	"github.com/alicebob/miniredis"
-	"github.com/ghetzel/go-stockutil/httputil"
-	"github.com/ghetzel/go-stockutil/log"
-	"github.com/ghetzel/go-stockutil/typeutil"
-	"github.com/ghetzel/testify/require"
+	"github.com/PerformLine/go-stockutil/httputil"
+	"github.com/PerformLine/go-stockutil/log"
+	"github.com/PerformLine/go-stockutil/typeutil"
+	"github.com/stretchr/testify/require"
 )
 
 func req(method string, path string) *http.Request {
