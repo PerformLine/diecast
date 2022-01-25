@@ -1,10 +1,8 @@
 module github.com/PerformLine/diecast
 
-replace github.com/PerformLine/go-webfriend => /home/jmoorhead/projects/pline/godev/go-webfriend
-
 require (
 	github.com/PerformLine/go-stockutil v1.9.2
-	github.com/PerformLine/go-webfriend v1.9.60
+	github.com/PerformLine/go-webfriend v1.9.62
 	github.com/PerformLine/ratelimit v1.1.0
 	github.com/PuerkitoBio/goquery v1.5.0
 	github.com/alecthomas/chroma v0.7.3
