@@ -35,8 +35,6 @@ github.com/PerformLine/friendscript v0.9.2 h1:Xur+2CuZF9JAWb7gSvaxPb7gZEGYL9h82H
 github.com/PerformLine/friendscript v0.9.2/go.mod h1:DoY84jpFrfkRhlRmeRyZidMOyJvhmFbC38lD8d+YY+A=
 github.com/PerformLine/go-stockutil v1.9.2 h1:l2bDDZlA8x6BEjLQrVAy3S+VoQcXy2SKRPIMobhTcHM=
 github.com/PerformLine/go-stockutil v1.9.2/go.mod h1:jyShWnJwYLETUL/+5nA1L9j93tdVnSSvr2BDPzh6D5Y=
-github.com/PerformLine/go-webfriend v0.12.13 h1:iS79OR0OdIne0F3tYc3D8wV+jTOs0gp5G30ks46IWJ8=
-github.com/PerformLine/go-webfriend v0.12.13/go.mod h1:axv/DusriOh9GjVWXPAinXE52d6j2lbU2KBa/gB0yjU=
 github.com/PerformLine/ratelimit v1.1.0 h1:pMdwUldipEkMLs41hgaGsVNhHbg7U95Vs2LBBUQFNYQ=
 github.com/PerformLine/ratelimit v1.1.0/go.mod h1:w3HK1Qx+CUHFeQp7S+F42hLKSGhBZCotcE93ce8EYgE=
 github.com/PuerkitoBio/goquery v1.5.0 h1:uGvmFXOA73IKluu/F84Xd1tt/z07GYm8X49XKHP7EJk=

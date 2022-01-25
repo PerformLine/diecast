@@ -1,10 +1,12 @@
 module github.com/PerformLine/diecast
 
+replace github.com/PerformLine/go-webfriend => /home/jmoorhead/projects/pline/godev/go-webfriend
+
 require (
 	github.com/HdrHistogram/hdrhistogram-go v1.1.2 // indirect
 	github.com/Microsoft/go-winio v0.5.1 // indirect
 	github.com/PerformLine/go-stockutil v1.9.2
-	github.com/PerformLine/go-webfriend v0.12.13
+	github.com/PerformLine/go-webfriend v0.12.14
 	github.com/PerformLine/ratelimit v1.1.0
 	github.com/PuerkitoBio/goquery v1.5.0
 	github.com/alecthomas/chroma v0.7.3
