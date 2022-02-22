@@ -12,7 +12,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/urfave/cli"
 	"github.com/PerformLine/diecast"
 	"github.com/PerformLine/go-stockutil/log"
 	"github.com/PerformLine/go-stockutil/maputil"
@@ -20,6 +19,7 @@ import (
 	"github.com/PerformLine/go-stockutil/sliceutil"
 	"github.com/PerformLine/go-stockutil/stringutil"
 	"github.com/PerformLine/go-stockutil/typeutil"
+	"github.com/urfave/cli"
 	yaml "gopkg.in/yaml.v2"
 )
 

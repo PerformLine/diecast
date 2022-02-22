@@ -13,7 +13,6 @@ import (
 	"strings"
 	"time"
 
-	ico "github.com/biessek/golang-ico"
 	"github.com/PerformLine/go-stockutil/executil"
 	"github.com/PerformLine/go-stockutil/fileutil"
 	"github.com/PerformLine/go-stockutil/httputil"
@@ -21,6 +20,7 @@ import (
 	"github.com/PerformLine/go-stockutil/sliceutil"
 	"github.com/PerformLine/go-stockutil/stringutil"
 	"github.com/PerformLine/go-stockutil/typeutil"
+	ico "github.com/biessek/golang-ico"
 	base58 "github.com/jbenet/go-base58"
 	opentracing "github.com/opentracing/opentracing-go"
 	"github.com/opentracing/opentracing-go/ext"
