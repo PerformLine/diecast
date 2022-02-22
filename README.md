@@ -2,7 +2,7 @@
     <img src="/docs/src/assets/img/diecast-logotext-light-bg-128.png">
 </p>
 
-[![GoDoc](https://godoc.org/github.com/ghetzel/diecast?status.svg)](https://godoc.org/github.com/ghetzel/diecast)
+[![GoDoc](https://godoc.org/github.com/PerformLine/diecast?status.svg)](https://godoc.org/github.com/PerformLine/diecast)
 
 ## tl;dr
 
