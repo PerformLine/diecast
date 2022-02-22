@@ -44,7 +44,7 @@ require (
 	cloud.google.com/go v0.65.0 // indirect
 	github.com/GehirnInc/crypt v0.0.0-20200316065508-bb7000b8a962 // indirect
 	github.com/Microsoft/go-winio v0.5.2 // indirect
-	github.com/PerformLine/argonaut v0.2.2 // indirect
+	github.com/PerformLine/argonaut v0.2.3-0.20220222205313-67d9aabe74bb // indirect
 	github.com/PerformLine/friendscript v1.6.7 // indirect
 	github.com/alicebob/gopher-json v0.0.0-20200520072559-a9ecdc9d1d3a // indirect
 	github.com/andybalholm/cascadia v1.3.1 // indirect

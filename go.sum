@@ -52,8 +52,8 @@ github.com/Microsoft/go-winio v0.5.2 h1:a9IhgEQBCUEk6QCdml9CiJGhAws+YwffDHEMp1VM
 github.com/Microsoft/go-winio v0.5.2/go.mod h1:WpS1mjBmmwHBEWmogvA2mj8546UReBk4v8QkMxJ6pZY=
 github.com/NYTimes/gziphandler v0.0.0-20170623195520-56545f4a5d46/go.mod h1:3wb06e3pkSAbeQ52E9H9iFoQsEEwGN64994WTCIhntQ=
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
-github.com/PerformLine/argonaut v0.2.2 h1:GGkBasOYUe/JWDWIq0nLPcqry5Ku+eXaIVpSi+kD/Hk=
-github.com/PerformLine/argonaut v0.2.2/go.mod h1:UPH05Rq2hwqzJu+WGoVOLD5GuDxdolAIsH0tYxKLQcU=
+github.com/PerformLine/argonaut v0.2.3-0.20220222205313-67d9aabe74bb h1:XggSriOmAzvzr13lcGYHf5XDMHn8ImvAp6YU9YVX8A4=
+github.com/PerformLine/argonaut v0.2.3-0.20220222205313-67d9aabe74bb/go.mod h1:T7IVng2t4FWpe0VY692dAPZ8ZgJg2amqgX9NMw5RD70=
 github.com/PerformLine/friendscript v1.6.7 h1:ikUtLC7Wa2aLXeN2wwgk4e+9YT8ONMAGLDIkgda2h4Q=
 github.com/PerformLine/friendscript v1.6.7/go.mod h1:LL33L4gru8kmL+PN9XzcERTzhPlFx2RhvxCOAZ8w3Ek=
 github.com/PerformLine/go-stockutil v1.9.2/go.mod h1:jyShWnJwYLETUL/+5nA1L9j93tdVnSSvr2BDPzh6D5Y=
