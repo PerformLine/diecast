@@ -4,6 +4,7 @@ go 1.17
 
 require (
 	github.com/PerformLine/go-stockutil v1.9.2
+	github.com/PerformLine/go-webfriend amd64
 	github.com/PerformLine/ratelimit v1.1.0
 	github.com/PuerkitoBio/goquery v1.8.0
 	github.com/alecthomas/chroma v0.10.0
@@ -43,8 +44,7 @@ require (
 	cloud.google.com/go v0.65.0 // indirect
 	github.com/GehirnInc/crypt v0.0.0-20200316065508-bb7000b8a962 // indirect
 	github.com/PerformLine/argonaut v0.2.2 // indirect
-	github.com/PerformLine/friendscript v1.6.7 // indirect
-	github.com/PerformLine/go-webfriend v1.9.64 // indirect
+	github.com/PerformLine/friendscript amd64
 	github.com/alicebob/gopher-json v0.0.0-20200520072559-a9ecdc9d1d3a // indirect
 	github.com/andybalholm/cascadia v1.3.1 // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
@@ -91,7 +91,6 @@ require (
 	github.com/miekg/dns v1.1.12 // indirect
 	github.com/mitchellh/go-ps v0.0.0-20170309133038-4fdf99ab2936 // indirect
 	github.com/mitchellh/mapstructure v1.1.2 // indirect
-	github.com/mjibson/esc v0.2.0 // indirect
 	github.com/nxadm/tail v1.4.8 // indirect
 	github.com/onsi/ginkgo v1.16.4 // indirect
 	github.com/op/go-logging v0.0.0-20160315200505-970db520ece7 // indirect
