@@ -4,9 +4,9 @@ import (
 	"bytes"
 	"html/template"
 
+	"github.com/PerformLine/go-stockutil/typeutil"
 	"github.com/alecthomas/chroma/lexers"
 	"github.com/alecthomas/chroma/quick"
-	"github.com/PerformLine/go-stockutil/typeutil"
 )
 
 var HighlightTheme = `monokai`

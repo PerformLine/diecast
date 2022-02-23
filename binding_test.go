@@ -7,10 +7,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/alicebob/miniredis"
 	"github.com/PerformLine/go-stockutil/httputil"
 	"github.com/PerformLine/go-stockutil/log"
 	"github.com/PerformLine/go-stockutil/typeutil"
+	"github.com/alicebob/miniredis"
 	"github.com/stretchr/testify/require"
 )
 

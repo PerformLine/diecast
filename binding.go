@@ -16,12 +16,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/PuerkitoBio/goquery"
 	"github.com/PerformLine/go-stockutil/httputil"
 	"github.com/PerformLine/go-stockutil/log"
 	"github.com/PerformLine/go-stockutil/sliceutil"
 	"github.com/PerformLine/go-stockutil/stringutil"
 	"github.com/PerformLine/go-stockutil/typeutil"
+	"github.com/PuerkitoBio/goquery"
 	"github.com/oliveagle/jsonpath"
 	opentracing "github.com/opentracing/opentracing-go"
 	"gopkg.in/yaml.v2"

@@ -12,11 +12,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/PuerkitoBio/goquery"
 	"github.com/PerformLine/go-stockutil/httputil"
 	"github.com/PerformLine/go-stockutil/maputil"
 	"github.com/PerformLine/go-stockutil/sliceutil"
 	"github.com/PerformLine/go-stockutil/typeutil"
+	"github.com/PuerkitoBio/goquery"
 	"github.com/go-shiori/go-readability"
 	base58 "github.com/jbenet/go-base58"
 	"github.com/microcosm-cc/bluemonday"
