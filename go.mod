@@ -3,9 +3,9 @@ module github.com/PerformLine/diecast
 go 1.17
 
 require (
-	github.com/PerformLine/go-stockutil v1.9.3-0.20220222201122-cc24eac52267
-	github.com/PerformLine/go-webfriend v0.12.18-0.20220222192755-584e4f5023c0
-	github.com/PerformLine/ratelimit v1.1.0
+	github.com/PerformLine/go-stockutil v1.9.3
+	github.com/PerformLine/go-webfriend v1.9.65
+	github.com/PerformLine/ratelimit v1.1.1
 	github.com/PuerkitoBio/goquery v1.8.0
 	github.com/alecthomas/chroma v0.10.0
 	github.com/alicebob/miniredis v2.5.0+incompatible
@@ -44,8 +44,8 @@ require (
 	cloud.google.com/go v0.65.0 // indirect
 	github.com/GehirnInc/crypt v0.0.0-20200316065508-bb7000b8a962 // indirect
 	github.com/Microsoft/go-winio v0.5.2 // indirect
-	github.com/PerformLine/argonaut v0.2.3-0.20220222205313-67d9aabe74bb // indirect
-	github.com/PerformLine/friendscript v1.6.7 // indirect
+	github.com/PerformLine/argonaut v0.2.3 // indirect
+	github.com/PerformLine/friendscript v1.8.0 // indirect
 	github.com/alicebob/gopher-json v0.0.0-20200520072559-a9ecdc9d1d3a // indirect
 	github.com/andybalholm/cascadia v1.3.1 // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
@@ -81,6 +81,7 @@ require (
 	github.com/jsummers/gobmp v0.0.0-20151104160322-e2ba15ffa76e // indirect
 	github.com/juliangruber/go-intersect v1.1.0 // indirect
 	github.com/kr/fs v0.1.0 // indirect
+	github.com/kr/pretty v0.2.1 // indirect
 	github.com/mafredri/cdp v0.28.0 // indirect
 	github.com/marten-seemann/qpack v0.2.1 // indirect
 	github.com/marten-seemann/qtls-go1-16 v0.1.4 // indirect
