@@ -65,8 +65,8 @@ github.com/PerformLine/go-stockutil v1.9.2/go.mod h1:jyShWnJwYLETUL/+5nA1L9j93td
 github.com/PerformLine/go-stockutil v1.9.3 h1:6Mty9/Zuy4LKtqn4qDJSfjnYEGsjNpIdTgqb4tHDNfI=
 github.com/PerformLine/go-stockutil v1.9.3/go.mod h1:4/8PF9Dp9BKke9UuDczslbKnZS0mj5dBLvJVNxEJvPw=
 github.com/PerformLine/go-webfriend v1.9.64/go.mod h1:DIB+nSdu61zUtfyFiMvAt+nf531vaF6S4x52lSJj11E=
-github.com/PerformLine/go-webfriend v1.9.65 h1:YILlCXzARW/DJjwbeZpoN9ANKfpHn0znComwVK/TfQw=
-github.com/PerformLine/go-webfriend v1.9.65/go.mod h1:OxEwJKO7Q9aP+jUj4gF8VhG6TtetpRWdqXPWk8+Bxzo=
+github.com/PerformLine/go-webfriend v1.9.66 h1:Uv3MUvJVndq4pjkneHgPdjMZp82P0o3CK1EkVoRLyg4=
+github.com/PerformLine/go-webfriend v1.9.66/go.mod h1:1T0qcA/HDmQdy4J7tvg4LUqxieZtbrQT+HY2KxZ7QYM=
 github.com/PerformLine/ratelimit v1.1.0/go.mod h1:w3HK1Qx+CUHFeQp7S+F42hLKSGhBZCotcE93ce8EYgE=
 github.com/PerformLine/ratelimit v1.1.1 h1:K3K1lbvBaBIhI8O3l8nLvaVuAxMts2pMMOhuVnXRsFM=
 github.com/PerformLine/ratelimit v1.1.1/go.mod h1:KpeWQ5X9x7J5r+g8AoMRNQrJ5P0XU8mkfEVNb50/TsU=
