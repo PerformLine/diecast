@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/PerformLine/go-stockutil v1.9.3
-	github.com/PerformLine/go-webfriend v1.9.66
+	github.com/PerformLine/go-webfriend v1.9.67
 	github.com/PerformLine/ratelimit v1.1.1
 	github.com/PuerkitoBio/goquery v1.8.0
 	github.com/alecthomas/chroma v0.10.0
