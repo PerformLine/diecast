@@ -384,7 +384,7 @@ func (self *ProxyMount) openWithType(name string, req *http.Request, requestBody
 				mountResponse.ContentType = response.Header.Get(`Content-Type`)
 
 				for k, v := range response.Header {
-					mountResponse.Metadata[k] = strings.Join(v, `,`)
+					mountResponse.Metadata[k] = v
 				}
 
 				return mountResponse, nil
