@@ -11,7 +11,7 @@ import (
 type MountResponse struct {
 	ContentType  string
 	StatusCode   int
-	Metadata     map[string]interface{}
+	Metadata     map[string][]string
 	RedirectTo   string
 	RedirectCode int
 	payload      interface{}
@@ -23,7 +23,7 @@ func NewMountResponse(name string, size int64, payload interface{}) *MountRespon
 	return &MountResponse{
 		ContentType: `application/octet-stream`,
 		StatusCode:  http.StatusOK,
-		Metadata:    make(map[string]interface{}),
+		Metadata:    make(map[string][]string),
 		payload:     payload,
 		name:        name,
 		size:        size,

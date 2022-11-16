@@ -24,7 +24,7 @@ type candidateFile struct {
 	MimeType      string
 	RedirectTo    string
 	RedirectCode  int
-	Headers       map[string]interface{}
+	Headers       map[string][]string
 	PathParams    []KV
 	ForceTemplate bool
 }
@@ -259,8 +259,10 @@ func (self *Server) handleCandidateFile(
 	}
 
 	// add in any metadata as response headers
-	for k, v := range file.Headers {
-		w.Header().Set(k, fmt.Sprintf("%v", v))
+	for k, vs := range file.Headers {
+		for _, v := range vs {
+			w.Header().Add(k, fmt.Sprintf("%v", v))
+		}
 	}
 
 	if file.MimeType == `` {

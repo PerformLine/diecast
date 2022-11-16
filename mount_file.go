@@ -9,17 +9,16 @@ import (
 	"strings"
 
 	"github.com/PerformLine/go-stockutil/fileutil"
-	"github.com/PerformLine/go-stockutil/sliceutil"
 )
 
 // A FileMount exposes the contents of a given filesystem directory.
 type FileMount struct {
-	MountPoint      string                 `json:"mount"`
-	Path            string                 `json:"source"`
-	Passthrough     bool                   `json:"passthrough"`
-	ResponseHeaders map[string]interface{} `json:"response_headers,omitempty"`
-	ResponseCode    int                    `json:"response_code"`
-	FileSystem      http.FileSystem        `json:"-"`
+	MountPoint      string              `json:"mount"`
+	Path            string              `json:"source"`
+	Passthrough     bool                `json:"passthrough"`
+	ResponseHeaders map[string][]string `json:"response_headers,omitempty"`
+	ResponseCode    int                 `json:"response_code"`
+	FileSystem      http.FileSystem     `json:"-"`
 }
 
 func (self *FileMount) GetMountPoint() string {
@@ -67,7 +66,6 @@ func (self *FileMount) OpenWithType(name string, req *http.Request, requestBody 
 
 		// add explicit response headers to response
 		for name, value := range self.ResponseHeaders {
-			value = strings.Join(sliceutil.Stringify(value), `,`)
 			response.Metadata[name] = value
 		}
 
