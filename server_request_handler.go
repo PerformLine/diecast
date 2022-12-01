@@ -32,14 +32,14 @@ type candidateFile struct {
 // The main entry point for handling requests not otherwise intercepted by Actions or User Routes.
 //
 // The Process:
-//     1. Build a list of paths to try based on the requested path.  This is how things like
-//        expanding "/thing" -> "/thing/index.html" OR "/thing.html" works.
 //
-//     2. For each path, do the following:
+//  1. Build a list of paths to try based on the requested path.  This is how things like
+//     expanding "/thing" -> "/thing/index.html" OR "/thing.html" works.
 //
-//        a. try to find a local file named X in the webroot
-//        b.
+//  2. For each path, do the following:
 //
+//     a. try to find a local file named X in the webroot
+//     b.
 func (self *Server) handleRequest(w http.ResponseWriter, req *http.Request) {
 	var id = reqid(req)
 	var prefix = fmt.Sprintf("%s/", self.rp())

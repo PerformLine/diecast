@@ -763,8 +763,10 @@ func (self *Server) Serve(workers ...ServeFunc) error {
 	case `quic`, `http3`:
 		useUDP = true
 		var h3s = &http3.Server{
-			Server:     srv,
-			QuicConfig: nil,
+			Addr:           srv.Addr,
+			TLSConfig:      srv.TLSConfig,
+			MaxHeaderBytes: srv.MaxHeaderBytes,
+			QuicConfig:     nil,
 		}
 
 		serveable = &h3serveable{

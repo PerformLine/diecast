@@ -73,20 +73,19 @@ var redisBlacklistedCommands = []string{
 // The Redis binding protocol is used to retrieve or modify items in a Redis server.
 // It is specified with URLs that use the redis://[host[:port]]/db/key scheme.
 //
-// Protocol Options
+// # Protocol Options
 //
-// - redis.default_host (localhost:6379)
-//   Specifies the hostname:port to use if a resource URI does not specify one.
+//   - redis.default_host (localhost:6379)
+//     Specifies the hostname:port to use if a resource URI does not specify one.
 //
-// - redis.max_idle (10)
-//   The maximum number of idle connections to maintain in a connection pool.
+//   - redis.max_idle (10)
+//     The maximum number of idle connections to maintain in a connection pool.
 //
-// - redis.idle_timeout (120s)
-//   The maximum idle time of a connection before it is closed.
+//   - redis.idle_timeout (120s)
+//     The maximum idle time of a connection before it is closed.
 //
-// - redis.max_lifetime (10m)
-//   The maximum amount of time a connection can remain open before being recycled.
-//
+//   - redis.max_lifetime (10m)
+//     The maximum amount of time a connection can remain open before being recycled.
 type RedisProtocol struct {
 }
 
