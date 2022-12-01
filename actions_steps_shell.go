@@ -29,12 +29,12 @@ import (
 //
 // Command options specified as an object:
 //
-//	data:
-//		command:   				# interpreted the same as above (string or array)
-// 		inherit: true|false 	# whether the current shell environment should be inherited by the command
-//      env:
-//			X: abc
-//			Y: zyx
+//		data:
+//			command:   				# interpreted the same as above (string or array)
+//			inherit: true|false 	# whether the current shell environment should be inherited by the command
+//	     env:
+//				X: abc
+//				Y: zyx
 //
 // -------------------------------------------------------------------------------------------------
 type ShellStep struct{}

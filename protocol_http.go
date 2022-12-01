@@ -24,7 +24,6 @@ import (
 
 // The HTTP binding protocol is used to interact with web servers and RESTful APIs.
 // It is specified with URLs that use the http:// or https:// schemes.
-//
 type HttpProtocol struct {
 }
 

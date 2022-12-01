@@ -13,7 +13,9 @@ import (
 )
 
 // [type=process] Process the output of the previous step by performing a sequence of discrete
-//                operations on the data.
+//
+//	operations on the data.
+//
 // -------------------------------------------------------------------------------------------------
 type ProcessStep struct{}
 
