@@ -15,7 +15,7 @@ import (
 	"github.com/PerformLine/go-stockutil/maputil"
 	"github.com/PerformLine/go-stockutil/typeutil"
 	"github.com/jbenet/go-base58"
-	"github.com/lucas-clemente/quic-go/http3"
+	"github.com/quic-go/quic-go/http3"
 )
 
 func bugWarning() {
