@@ -3,7 +3,7 @@ module github.com/PerformLine/diecast
 go 1.20
 
 require (
-	github.com/PerformLine/go-performline-stdlib v1.3.3
+	github.com/PerformLine/go-stockutil v1.9.4
 	github.com/PerformLine/ratelimit v1.1.1
 	github.com/PuerkitoBio/goquery v1.8.1
 	github.com/alecthomas/chroma v0.10.0
@@ -13,7 +13,7 @@ require (
 	github.com/ghodss/yaml v1.0.0
 	github.com/go-shiori/go-readability v0.0.0-20230421032831-c66949dfc0ad
 	github.com/gobwas/glob v0.2.3
-	github.com/gomodule/redigo v2.0.0+incompatible
+	github.com/gomodule/redigo v1.8.9
 	github.com/grokify/html-strip-tags-go v0.0.1
 	github.com/husobee/vestigo v1.1.1
 	github.com/jbenet/go-base58 v0.0.0-20150317085156-6237cf65f3a6
@@ -40,12 +40,12 @@ require (
 )
 
 require (
-	cloud.google.com/go v0.110.7 // indirect
+	cloud.google.com/go/compute v1.20.1 // indirect
+	cloud.google.com/go/compute/metadata v0.2.3 // indirect
 	github.com/GehirnInc/crypt v0.0.0-20230320061759-8cc1b52080c5 // indirect
 	github.com/Microsoft/go-winio v0.5.2 // indirect
 	github.com/PerformLine/argonaut v0.2.3 // indirect
 	github.com/PerformLine/friendscript v1.8.0 // indirect
-	github.com/PerformLine/go-stockutil v1.9.4 // indirect
 	github.com/alicebob/gopher-json v0.0.0-20200520072559-a9ecdc9d1d3a // indirect
 	github.com/andybalholm/cascadia v1.3.2 // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
@@ -102,7 +102,6 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/quic-go/qpack v0.4.0 // indirect
 	github.com/quic-go/qtls-go1-20 v0.3.2 // indirect
-	github.com/sirupsen/logrus v1.8.1 // indirect
 	github.com/uber/jaeger-lib v2.4.1+incompatible // indirect
 	github.com/urfave/negroni v1.0.1-0.20191011213438-f4316798d5d3 // indirect
 	github.com/yuin/gopher-lua v0.0.0-20210529063254-f4c35e4016d9 // indirect
