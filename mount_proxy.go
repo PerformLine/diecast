@@ -111,6 +111,7 @@ func (self *ProxyMount) openWithType(name string, req *http.Request, requestBody
 	var id = reqid(req)
 	var proxyURI string
 	var timeout time.Duration
+	fmt.Println("openWithType RemoteAddr: ", req.RemoteAddr)
 
 	if self.Client == nil {
 		if t, ok := self.Timeout.(string); ok {
