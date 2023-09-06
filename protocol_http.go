@@ -193,6 +193,7 @@ func (self *HttpProtocol) Retrieve(rr *ProtocolRequest) (*ProtocolResponse, erro
 		request.Header.Add("X-Forwarded-For", rr.Request.RemoteAddr)
 		//}
 		request.Header.Add("X-Forwarded-For-2", rr.Request.RemoteAddr)
+		fmt.Println("X-Forwarded-For-2", rr.Request.RemoteAddr)
 
 		// big block of custom TLS override setup
 		// -------------------------------------------------------------------------------------

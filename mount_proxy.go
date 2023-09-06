@@ -236,6 +236,7 @@ func (self *ProxyMount) openWithType(name string, req *http.Request, requestBody
 		newReq.Header.Add("X-Forwarded-For", req.RemoteAddr)
 		//}
 		newReq.Header.Add("X-Forwarded-For-3", req.RemoteAddr)
+		fmt.Println("X-Forwarded-For-3", req.RemoteAddr)
 
 		// option to control whether we tell the remote server to close the connection
 		if self.CloseConnection != nil {

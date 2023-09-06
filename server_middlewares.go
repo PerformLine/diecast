@@ -104,6 +104,7 @@ func (self *Server) middlewareStartRequest(w http.ResponseWriter, req *http.Requ
 
 	httputil.RequestSetValue(req, ContextRequestKey, requestId)
 	w.Header().Set(`X-Diecast-Request-ID`, requestId)
+	fmt.Println("X-Forwarded-For-4", req.RemoteAddr)
 	req.Header.Add("X-Forwarded-For-4", req.RemoteAddr)
 
 	// setup request tracing info
