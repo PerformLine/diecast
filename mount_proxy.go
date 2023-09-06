@@ -231,6 +231,9 @@ func (self *ProxyMount) openWithType(name string, req *http.Request, requestBody
 			newReq.Header.Set(`User-Agent`, DiecastUserAgentString)
 		}
 
+		// Preserve the original request IP address.
+		newReq.Header.Set(`X-Forwarded-For`, req.RemoteAddr)
+
 		// option to control whether we tell the remote server to close the connection
 		if self.CloseConnection != nil {
 			if c := *self.CloseConnection; c {
