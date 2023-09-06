@@ -3,7 +3,8 @@ module github.com/PerformLine/diecast
 go 1.20
 
 require (
-	github.com/PerformLine/go-stockutil v1.9.4
+	github.com/PerformLine/go-stockutil v1.9.5
+	github.com/PerformLine/go-webfriend v1.10.0
 	github.com/PerformLine/ratelimit v1.1.1
 	github.com/PuerkitoBio/goquery v1.8.1
 	github.com/alecthomas/chroma v0.10.0

@@ -1,4 +1,4 @@
-FROM golang:1.14.4-alpine3.12
+FROM golang:1.20.7-alpine3.18
 MAINTAINER Gary Hetzel <its@gary.cool>
 
 ENV GO111MODULE on
