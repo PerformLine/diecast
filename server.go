@@ -692,7 +692,7 @@ func (self *Server) Serve(workers ...ServeFunc) error {
 	}
 
 	// setup TLSConfig
-	//self.TLS = nil
+	self.TLS = nil
 	if ssl := self.TLS; ssl != nil && ssl.Enable {
 		var tc = new(tls.Config)
 
@@ -884,9 +884,11 @@ func (self *Server) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	// setup a ResponseWriter interceptor that catches status code and bytes written
 	// but passes through the Body without buffering it (like httptest.ResponseRecorder does)
 	var interceptor = intercept(w)
+	fmt.Printf("interceptor header: %v\n", interceptor.Header())
 	httputil.RequestSetValue(req, ContextResponseKey, interceptor)
 
 	// process the before stack
+	fmt.Printf("req header: %v\n", req.Header)
 	for i, before := range self.BeforeHandlers {
 		if proceed := before(interceptor, req); !proceed {
 			log.Debugf(
