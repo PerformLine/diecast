@@ -889,6 +889,7 @@ func (self *Server) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 
 	// process the before stack
 	fmt.Printf("req header: %v\n", req.Header)
+	fmt.Printf("req remote addr: %v\n", req.RemoteAddr)
 	for i, before := range self.BeforeHandlers {
 		if proceed := before(interceptor, req); !proceed {
 			log.Debugf(
