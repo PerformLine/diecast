@@ -692,6 +692,7 @@ func (self *Server) Serve(workers ...ServeFunc) error {
 	}
 
 	// setup TLSConfig
+	//self.TLS = nil
 	if ssl := self.TLS; ssl != nil && ssl.Enable {
 		var tc = new(tls.Config)
 

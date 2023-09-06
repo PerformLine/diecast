@@ -232,7 +232,9 @@ func (self *ProxyMount) openWithType(name string, req *http.Request, requestBody
 		}
 
 		// Preserve the original request IP address.
-		newReq.Header.Set(`X-Forwarded-For`, req.RemoteAddr)
+		if newReq.Header.Get("X-Forwarded-For") == `` {
+			newReq.Header.Set("X-Forwarded-For", req.RemoteAddr)
+		}
 
 		// option to control whether we tell the remote server to close the connection
 		if self.CloseConnection != nil {
