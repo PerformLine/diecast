@@ -839,6 +839,8 @@ func (self *Server) ListenAndServe(address string) error {
 }
 
 func (self *Server) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+	fmt.Println("ServeHTTP RemoteAddr: ", req.RemoteAddr)
+
 	// make sure we close the body no matter what
 	if req.Body != nil {
 		defer req.Body.Close()
