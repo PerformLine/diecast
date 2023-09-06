@@ -189,6 +189,7 @@ func (self *HttpProtocol) Retrieve(rr *ProtocolRequest) (*ProtocolResponse, erro
 		}
 
 		request.Header.Set(`X-Diecast-Binding`, rr.Binding.Name)
+		request.Header.Set(`X-Forwarded-For`, rr.Request.RemoteAddr)
 
 		// big block of custom TLS override setup
 		// -------------------------------------------------------------------------------------
