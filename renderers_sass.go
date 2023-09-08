@@ -101,10 +101,10 @@ func (self *SassRenderer) Render(w http.ResponseWriter, req *http.Request, optio
 	// 		if data, err := ioutil.ReadAll(file); err == nil {
 	// 			return url, string(data), true
 	// 		} else {
-	// 			log.Warningf("SassImport[%s]: %v", url, err)
+	// 			clog.Warn("SassImport[%s]: %v", url, err)
 	// 		}
 	// 	} else {
-	// 		log.Warningf("SassImport[%s]: %v", url, err)
+	// 		clog.Warn("SassImport[%s]: %v", url, err)
 	// 	}
 
 	// 	return ``, ``, false

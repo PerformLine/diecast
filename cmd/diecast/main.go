@@ -13,7 +13,7 @@ import (
 	"time"
 
 	"github.com/PerformLine/diecast"
-	"github.com/PerformLine/go-stockutil/log"
+	"github.com/PerformLine/go-clog/clog"
 	"github.com/PerformLine/go-stockutil/maputil"
 	"github.com/PerformLine/go-stockutil/netutil"
 	"github.com/PerformLine/go-stockutil/sliceutil"
@@ -23,7 +23,24 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
+var serviceName = diecast.ApplicationName
+
 func main() {
+	logLevel := clog.LogLevelInfo
+	logFormat := clog.FormatJSON
+
+	logLevelEnv := os.Getenv("LOG_LEVEL")
+	if logLevelEnv != "" {
+		logLevel = clog.StringToLogLevel(logLevelEnv)
+	}
+
+	if os.Getenv("UPLOAD_LOG_FORMAT") == "text" {
+		logFormat = clog.FormatConsole
+	}
+
+	logger := clog.MustNewLogger(logLevel, logFormat)
+	clog.SetGlobalLogger(logger.WithName(serviceName))
+
 	var app = cli.NewApp()
 	app.Name = diecast.ApplicationName
 	app.Usage = diecast.ApplicationSummary
@@ -176,7 +193,7 @@ func main() {
 
 			for _, group := range defs {
 				if group.Description == `` {
-					log.Warningf("%v: undocumented group", group.Name)
+					clog.Warn("%v: undocumented group", group.Name)
 				}
 
 				for _, fn := range group.Functions {
@@ -185,18 +202,18 @@ func main() {
 					}
 
 					if fn.Summary == `` {
-						log.Warningf("%v: undocumented function", fn.Name)
+						clog.Warn("%v: undocumented function", fn.Name)
 					} else if len(fn.Examples) == 0 {
-						log.Noticef("%v: no examples", fn.Name)
+						clog.Print("%v: no examples", fn.Name)
 					} else if fn.Function != nil {
 						if i, _, err := typeutil.FunctionArity(fn.Function); err == nil {
 							if l := len(fn.Arguments); l < i {
-								log.Noticef("%v: missing argdocs; have %d, expected %d", fn.Name, l, i)
+								clog.Print("%v: missing argdocs; have %d, expected %d", fn.Name, l, i)
 							} else if l > i {
-								log.Noticef("%v: too many argdocs; have %d, expected %d", fn.Name, l, i)
+								clog.Print("%v: too many argdocs; have %d, expected %d", fn.Name, l, i)
 							}
 						} else {
-							log.Errorf("%v: %v", fn.Name, err)
+							clog.Error("%v: %v", fn.Name, err)
 						}
 					}
 				}
@@ -211,7 +228,6 @@ func main() {
 			}
 		}
 
-		log.SetLevelString(c.String(`log-level`))
 		return nil
 	}
 
@@ -262,7 +278,7 @@ func main() {
 		populateFlags(server.OverridePageObject, c.StringSlice(`override`))
 
 		if err := server.LoadConfig(c.String(`config`)); err != nil {
-			log.Fatalf("config error: %v", err)
+			clog.Fatal("config error: %v", err)
 		}
 
 		if patterns := c.StringSlice(`template-pattern`); len(patterns) > 0 {
@@ -282,11 +298,11 @@ func main() {
 					proxyMount.PassthroughErrors = c.Bool(`mounts-passthrough-errors`)
 
 					if proxyMount.PassthroughRequests {
-						log.Debugf("%T %d configured to passthrough client requests", proxyMount, i)
+						clog.Debug("%T %d configured to passthrough client requests", proxyMount, i)
 					}
 
 					if proxyMount.PassthroughErrors {
-						log.Debugf("%T %d configured to consider HTTP 4xx/5xx responses as valid", proxyMount, i)
+						clog.Debug("%T %d configured to consider HTTP 4xx/5xx responses as valid", proxyMount, i)
 					}
 				}
 
@@ -297,7 +313,7 @@ func main() {
 		server.SetMounts(mounts)
 
 		for _, mount := range server.Mounts {
-			log.Debugf("mount %T: %+v", mount, mount)
+			clog.Debug("mount %T: %+v", mount, mount)
 		}
 
 		var renderSingleFile = c.String(`render`)
@@ -311,16 +327,16 @@ func main() {
 					server.TemplatePatterns = []string{`*`}
 					server.Address = fmt.Sprintf("127.0.0.1:%d", port)
 					server.BindingPrefix = fmt.Sprintf("http://%s", server.Address)
-					server.Log.Destination = `/dev/null`
+					clog.SetGlobalLogger(clog.NopLogger())
 
 					if !c.IsSet(`log-level`) {
-						log.SetLevelString(`warning`)
+						clog.SetLevel(clog.LogLevelWarning)
 					}
 				} else {
-					log.Fatalf("cannot allocate ephemeral port: %v", err)
+					clog.Fatal("cannot allocate ephemeral port: %v", err)
 				}
 			} else {
-				log.Fatalf("cannot get abspath: %v", err)
+				clog.Fatal("cannot get abspath: %v", err)
 			}
 		}
 
@@ -339,7 +355,7 @@ func main() {
 
 			var errchan = make(chan error)
 
-			log.Infof(
+			clog.Info(
 				"diecast v%v listening at %s://%s (protocol: %s)",
 				diecast.ApplicationVersion,
 				scheme,
@@ -352,7 +368,7 @@ func main() {
 			}()
 
 			if c.Bool(`build-site`) {
-				log.Infof("Rendering site in %v", servePath)
+				clog.Info("Rendering site in %v", servePath)
 				var paths = make([]string, 0)
 
 				if err := filepath.Walk(servePath, func(path string, info os.FileInfo, err error) error {
@@ -377,13 +393,13 @@ func main() {
 
 					return nil
 				}); err != nil {
-					log.Fatalf("build error: %v", err)
+					clog.Fatal("build error: %v", err)
 				}
 
 				var destinationPath = c.String(`build-destination`)
 
 				if err := os.RemoveAll(destinationPath); err != nil {
-					log.Fatalf("Failed to cleanup destination: %v", err)
+					clog.Fatal("Failed to cleanup destination: %v", err)
 				}
 
 				sort.Strings(paths)
@@ -402,22 +418,22 @@ func main() {
 						var destFile = filepath.Join(destinationPath, path)
 
 						if err := os.MkdirAll(filepath.Dir(destFile), 0755); err != nil {
-							log.Fatalf("Failed to create destination: %v", err)
+							clog.Fatal("Failed to create destination: %v", err)
 						}
 
 						if file, err := os.Create(destFile); err == nil {
 							_, err := io.Copy(file, response.Body)
 
 							if err != nil {
-								log.Fatalf("Failed to write file %v: %v", destFile, err)
+								clog.Fatal("Failed to write file %v: %v", destFile, err)
 							}
 
 							file.Close()
 						} else {
-							log.Fatalf("Failed to create file %v: %v", destFile, err)
+							clog.Fatal("Failed to create file %v: %v", destFile, err)
 						}
 					} else {
-						log.Fatalf("Request to %v failed: %v", path, err)
+						clog.Fatal("Request to %v failed: %v", path, err)
 					}
 				}
 			} else {
@@ -429,11 +445,13 @@ func main() {
 
 				select {
 				case err := <-errchan:
-					log.FatalIf(err)
+					if err != nil {
+						clog.Fatal(err.Error())
+					}
 				}
 			}
 		} else {
-			log.Fatalf("Failed to start HTTP server: %v", err)
+			clog.Fatal("Failed to start HTTP server: %v", err)
 		}
 	}
 
@@ -477,7 +495,7 @@ func appendDataFile(data *maputil.Map, baseK string, filename string) {
 
 				parsed = pM.MapNative()
 			} else {
-				log.Fatalf("bad data-file: %v", err)
+				clog.Fatal("bad data-file: %v", err)
 			}
 		case `.json`:
 			err = json.NewDecoder(file).Decode(&parsed)
@@ -486,10 +504,10 @@ func appendDataFile(data *maputil.Map, baseK string, filename string) {
 		}
 
 		if err != nil {
-			log.Fatalf("bad data-file: %v", err)
+			clog.Fatal("bad data-file: %v", err)
 		}
 
-		log.Debugf("parsing data-file: path=%s key=%s", filename, baseK)
+		clog.Debug("parsing data-file: path=%s key=%s", filename, baseK)
 
 		if baseK != `` {
 			data.Set(baseK, parsed)
@@ -503,7 +521,7 @@ func appendDataFile(data *maputil.Map, baseK string, filename string) {
 			}
 		}
 	} else {
-		log.Fatalf("bad data-file: %v", err)
+		clog.Fatal("bad data-file: %v", err)
 	}
 }
 

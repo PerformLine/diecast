@@ -16,6 +16,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/PerformLine/go-clog/clog"
 	"github.com/PerformLine/go-stockutil/httputil"
 	"github.com/PerformLine/go-stockutil/log"
 	"github.com/PerformLine/go-stockutil/sliceutil"
@@ -152,7 +153,7 @@ func (self *Binding) shouldEvaluate(req *http.Request, data map[string]interface
 
 		if !proceed {
 			self.Optional = true
-			log.Debugf("[%s] Binding %q not being evaluated: path %q matched%s", id, self.Name, req.URL.Path, desc)
+			clog.Debug("[%s] Binding %q not being evaluated: path %q matched%s", id, self.Name, req.URL.Path, desc)
 			return ErrSkipEval
 		}
 
@@ -160,7 +161,7 @@ func (self *Binding) shouldEvaluate(req *http.Request, data map[string]interface
 			if v, err := EvalInline(self.OnlyIfExpr, data, funcs); err == nil {
 				if !typeutil.Bool(v) {
 					self.Optional = true
-					log.Debugf("[%s] Binding %q not being evaluated because only_if expression was false", id, self.Name)
+					clog.Debug("[%s] Binding %q not being evaluated because only_if expression was false", id, self.Name)
 					return ErrSkipEval
 				}
 			} else {
@@ -172,7 +173,7 @@ func (self *Binding) shouldEvaluate(req *http.Request, data map[string]interface
 			if v, err := EvalInline(self.NotIfExpr, data, funcs); err == nil {
 				if typeutil.Bool(v) {
 					self.Optional = true
-					log.Debugf("[%s] Binding %q not being evaluated because not_if expression was truthy", id, self.Name)
+					clog.Debug("[%s] Binding %q not being evaluated because not_if expression was truthy", id, self.Name)
 					return ErrSkipEval
 				}
 			} else {
@@ -239,7 +240,7 @@ func (self *Binding) tracedEvaluate(req *http.Request, header *TemplateHeader, d
 
 func (self *Binding) Evaluate(req *http.Request, header *TemplateHeader, data map[string]interface{}, funcs FuncMap) (interface{}, error) {
 	var id = reqid(req)
-	log.Debugf("[%s] Evaluating binding %q", id, self.Name)
+	clog.Debug("[%s] Evaluating binding %q", id, self.Name)
 
 	if req.Header.Get(`X-Diecast-Binding`) == self.Name {
 		httputil.RequestSetValue(req, ContextStatusKey, http.StatusLoopDetected)
@@ -295,10 +296,10 @@ func (self *Binding) Evaluate(req *http.Request, header *TemplateHeader, data ma
 						}
 					}
 				} else {
-					log.Warningf("binding loopback TLS (%q): %v", bpu.Hostname(), err)
+					clog.Warn("binding loopback TLS (%q): %v", bpu.Hostname(), err)
 				}
 			} else {
-				log.Warningf("binding loopback TLS: bad URI: %v", err)
+				clog.Warn("binding loopback TLS: bad URI: %v", err)
 			}
 		}
 	}
@@ -316,8 +317,8 @@ func (self *Binding) Evaluate(req *http.Request, header *TemplateHeader, data ma
 			return nil, fmt.Errorf("Cannot evaluate binding %v: invalid protocol scheme %q", self.Name, reqUrl.Scheme)
 		}
 
-		log.Debugf("[%s]  binding %q: protocol=%T uri=%v", id, self.Name, protocol, uri)
-		log.Infof("[%s] Binding: > %s %+v ? %s", id, strings.ToUpper(sliceutil.OrString(method, `get`)), reqUrl.String(), reqUrl.RawQuery)
+		clog.Debug("[%s]  binding %q: protocol=%T uri=%v", id, self.Name, protocol, uri)
+		clog.Info("[%s] Binding: > %s %+v ? %s", id, strings.ToUpper(sliceutil.OrString(method, `get`)), reqUrl.String(), reqUrl.RawQuery)
 
 		if response, err := protocol.Retrieve(&ProtocolRequest{
 			Verb:              method,
@@ -486,7 +487,7 @@ func (self *Binding) Evaluate(req *http.Request, header *TemplateHeader, data ma
 						if typeutil.IsArray(rv) || typeutil.IsMap(rv) {
 							if debugBody, err := json.MarshalIndent(rv, ``, `  `); err == nil {
 								for _, line := range stringutil.SplitLines(debugBody, "\n") {
-									log.Debugf("[%s]  [B] %s", id, line)
+									clog.Debug("[%s]  [B] %s", id, line)
 								}
 							}
 						}

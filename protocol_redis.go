@@ -10,7 +10,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/PerformLine/go-stockutil/log"
+	"github.com/PerformLine/go-clog/clog"
 	"github.com/PerformLine/go-stockutil/sliceutil"
 	"github.com/PerformLine/go-stockutil/stringutil"
 	"github.com/PerformLine/go-stockutil/typeutil"
@@ -124,7 +124,7 @@ func (self *RedisProtocol) Retrieve(rr *ProtocolRequest) (*ProtocolResponse, err
 			},
 		}
 
-		log.Debugf("RedisProtocol: created new pool to handle connections to %s", pid)
+		clog.Debug("RedisProtocol: created new pool to handle connections to %s", pid)
 		redisConnectionPool.Store(pid, pool)
 	}
 

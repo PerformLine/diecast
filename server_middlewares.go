@@ -13,10 +13,10 @@ import (
 	"strings"
 	"time"
 
+	"github.com/PerformLine/go-clog/clog"
 	"github.com/PerformLine/go-stockutil/executil"
 	"github.com/PerformLine/go-stockutil/fileutil"
 	"github.com/PerformLine/go-stockutil/httputil"
-	"github.com/PerformLine/go-stockutil/log"
 	"github.com/PerformLine/go-stockutil/sliceutil"
 	"github.com/PerformLine/go-stockutil/stringutil"
 	"github.com/PerformLine/go-stockutil/typeutil"
@@ -74,9 +74,9 @@ func (self *Server) traceNameFromRequest(req *http.Request) string {
 func (self *Server) middlewareStartRequest(w http.ResponseWriter, req *http.Request) bool {
 	var requestId = base58.Encode(stringutil.UUID().Bytes())
 
-	log.Debugf("[%s] %s", requestId, strings.Repeat(`-`, 69))
-	log.Debugf("[%s] %s %s (%s)", requestId, req.Method, req.RequestURI, req.RemoteAddr)
-	log.Debugf("[%s] middleware: request id", requestId)
+	clog.Debug("[%s] %s", requestId, strings.Repeat(`-`, 69))
+	clog.Debug("[%s] %s %s (%s)", requestId, req.Method, req.RequestURI, req.RemoteAddr)
+	clog.Debug("[%s] middleware: request id", requestId)
 
 	// setup opentracing for this request (if we should)
 	if self.opentrace != nil {
@@ -98,7 +98,7 @@ func (self *Server) middlewareStartRequest(w http.ResponseWriter, req *http.Requ
 				httputil.RequestSetValue(req, JaegerSpanKey, span)
 			}
 
-			log.Debugf("[%s] middleware: trace operation: %s", requestId, traceName)
+			clog.Debug("[%s] middleware: trace operation: %s", requestId, traceName)
 		}
 	}
 
@@ -115,7 +115,7 @@ func (self *Server) middlewareStartRequest(w http.ResponseWriter, req *http.Requ
 // handle request dumper (for debugging)
 func (self *Server) middlewareDebugRequest(w http.ResponseWriter, req *http.Request) bool {
 	if len(self.DebugDumpRequests) > 0 {
-		log.Debugf("[%s] middleware: request dumper", reqid(req))
+		clog.Debug("[%s] middleware: request dumper", reqid(req))
 		for match, destdir := range self.DebugDumpRequests {
 			var filename string
 
@@ -131,9 +131,9 @@ func (self *Server) middlewareDebugRequest(w http.ResponseWriter, req *http.Requ
 				if dump, err := os.Create(filename); err == nil {
 					dump.Write([]byte(formatRequest(req)))
 					dump.Close()
-					log.Debugf("wrote request to %v", dump.Name())
+					clog.Debug("wrote request to %v", dump.Name())
 				} else {
-					log.Warningf("failed to dump request: %v", err)
+					clog.Warn("failed to dump request: %v", err)
 				}
 			}
 		}
@@ -145,7 +145,7 @@ func (self *Server) middlewareDebugRequest(w http.ResponseWriter, req *http.Requ
 // inject global headers
 func (self *Server) middlewareInjectHeaders(w http.ResponseWriter, req *http.Request) bool {
 	if len(self.GlobalHeaders) > 0 {
-		log.Debugf("[%s] middleware: inject global headers", reqid(req))
+		clog.Debug("[%s] middleware: inject global headers", reqid(req))
 
 		for k, v := range self.GlobalHeaders {
 			if typeutil.IsArray(v) {
@@ -165,7 +165,7 @@ func (self *Server) middlewareInjectHeaders(w http.ResponseWriter, req *http.Req
 
 // process authenticators
 func (self *Server) middlewareProcessAuthenticators(w http.ResponseWriter, req *http.Request) bool {
-	log.Debugf("[%s] middleware: process authenticators", reqid(req))
+	clog.Debug("[%s] middleware: process authenticators", reqid(req))
 
 	if auth, err := self.Authenticators.Authenticator(req); err == nil {
 		if auth != nil {
@@ -187,12 +187,12 @@ func (self *Server) middlewareProcessAuthenticators(w http.ResponseWriter, req *
 
 // cleanup request tracing info
 func (self *Server) afterFinalizeAndLog(w http.ResponseWriter, req *http.Request) {
-	log.Debugf("[%s] after: finalize and log request", reqid(req))
+	clog.Debug("[%s] after: finalize and log request", reqid(req))
 	var took time.Duration
 
 	if tm := getRequestTimer(req); tm != nil {
 		took = time.Since(tm.StartedAt).Round(time.Microsecond)
-		log.Debugf("[%s] completed: %v", tm.ID, took)
+		clog.Debug("[%s] completed: %v", tm.ID, took)
 		httputil.RequestSetValue(req, `duration`, took)
 	}
 
@@ -283,10 +283,10 @@ func (self *Server) registerInternalRoutes() error {
 						if err := ico.Encode(buf, img); err == nil {
 							self.faviconImageIco = buf.Bytes()
 						} else {
-							log.Debugf("favicon encode: %v", err)
+							clog.Debug("favicon encode: %v", err)
 						}
 					} else {
-						log.Debugf("favicon decode: %v", err)
+						clog.Debug("favicon decode: %v", err)
 					}
 				}
 
@@ -318,7 +318,7 @@ func (self *Server) registerInternalRoutes() error {
 			}
 		})
 
-		log.Debugf("[actions] Registered %s", hndPath)
+		clog.Debug("[actions] Registered %s", hndPath)
 	}
 
 	return nil

@@ -12,7 +12,7 @@ import (
 	text "text/template"
 	"text/template/parse"
 
-	"github.com/PerformLine/go-stockutil/log"
+	"github.com/PerformLine/go-clog/clog"
 	"github.com/PerformLine/go-stockutil/rxutil"
 	"github.com/PerformLine/go-stockutil/stringutil"
 )
@@ -117,7 +117,7 @@ func (self *Template) ParseString(input string) error {
 	}
 
 	if self.contentOffset > 0 {
-		log.Debugf("Template parsed: content offset is %d lines", self.contentOffset)
+		clog.Debug("Template parsed: content offset is %d lines", self.contentOffset)
 	}
 
 	switch self.engine {
@@ -335,7 +335,7 @@ func (self *Template) prepareParseTree(tree *parse.Tree) error {
 func (self *Template) prepareNode(tree *parse.Tree, node parse.Node, depth int) {
 	var repr string
 
-	log.Debugf("%v%T", strings.Repeat(`  `, depth), node)
+	clog.Debug("%v%T", strings.Repeat(`  `, depth), node)
 
 	switch node.(type) {
 	case *parse.RangeNode:
@@ -354,7 +354,7 @@ func (self *Template) prepareNode(tree *parse.Tree, node parse.Node, depth int) 
 		var idents = varnode.Ident
 
 		for i, ident := range idents {
-			log.Debugf("%v%d: %v", strings.Repeat(`  `, depth+1), i, ident)
+			clog.Debug("%v%d: %v", strings.Repeat(`  `, depth+1), i, ident)
 		}
 
 		// if len(idents) > 1 {
@@ -369,10 +369,10 @@ func (self *Template) prepareNode(tree *parse.Tree, node parse.Node, depth int) 
 		}
 
 	case *parse.IdentifierNode:
-		log.Debugf("%v: %v", strings.Repeat(`  `, depth+1), node.(*parse.IdentifierNode).Ident)
+		clog.Debug("%v: %v", strings.Repeat(`  `, depth+1), node.(*parse.IdentifierNode).Ident)
 	}
 
 	if repr != `` {
-		log.Debugf("%v%s", strings.Repeat(`  `, depth), repr)
+		clog.Debug("%v%s", strings.Repeat(`  `, depth), repr)
 	}
 }

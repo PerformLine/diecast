@@ -11,8 +11,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/PerformLine/go-clog/clog"
 	"github.com/PerformLine/go-stockutil/httputil"
-	"github.com/PerformLine/go-stockutil/log"
 	"github.com/PerformLine/go-stockutil/maputil"
 	"github.com/PerformLine/go-stockutil/sliceutil"
 	"github.com/PerformLine/go-stockutil/stringutil"
@@ -117,7 +117,7 @@ func (self *ProxyMount) openWithType(name string, req *http.Request, requestBody
 			if tm, err := time.ParseDuration(t); err == nil {
 				timeout = tm
 			} else {
-				log.Warningf("[%s] proxy: INVALID TIMEOUT %q (%v), using default", id, t, err)
+				clog.Warn("[%s] proxy: INVALID TIMEOUT %q (%v), using default", id, t, err)
 				timeout = DefaultProxyMountTimeout
 			}
 		} else if tm, ok := self.Timeout.(time.Duration); ok {
@@ -250,7 +250,7 @@ func (self *ProxyMount) openWithType(name string, req *http.Request, requestBody
 		// inject params into new request
 		for name, value := range self.Params {
 			if newReq.URL.Query().Get(name) == `` {
-				log.Debugf("[%s] proxy: [Q] %v=%v", id, name, value)
+				clog.Debug("[%s] proxy: [Q] %v=%v", id, name, value)
 				httputil.SetQ(newReq.URL, name, value)
 			}
 		}
@@ -264,14 +264,14 @@ func (self *ProxyMount) openWithType(name string, req *http.Request, requestBody
 			}
 
 			if n, err := io.CopyN(&buf, requestBody, bufsz); err == nil {
-				log.Debugf("[%s] proxy: using streaming request body (body exceeds %d bytes)", id, n)
+				clog.Debug("[%s] proxy: using streaming request body (body exceeds %d bytes)", id, n)
 
 				// make the upstream request body the aggregate of the already-read portion of the body
 				// and the unread remainder of the incoming request body
 				newReq.Body = MultiReadCloser(&buf, requestBody)
 
 			} else if err == io.EOF {
-				log.Debugf("[%s] proxy: fixed-length request body (%d bytes)", id, buf.Len())
+				clog.Debug("[%s] proxy: fixed-length request body (%d bytes)", id, buf.Len())
 				newReq.Body = MultiReadCloser(&buf)
 				newReq.ContentLength = int64(buf.Len())
 				newReq.TransferEncoding = []string{`identity`}
@@ -284,25 +284,25 @@ func (self *ProxyMount) openWithType(name string, req *http.Request, requestBody
 		var to = newReq.Method + ` ` + newReq.URL.String()
 
 		if from == to {
-			log.Debugf("[%s] proxy: %s", id, from)
+			clog.Debug("[%s] proxy: %s", id, from)
 		} else {
-			log.Debugf("[%s] proxy: %s", id, from)
-			log.Debugf("[%s] proxy: %s (rewritten)", id, to)
+			clog.Debug("[%s] proxy: %s", id, from)
+			clog.Debug("[%s] proxy: %s (rewritten)", id, to)
 		}
 
-		log.Debugf("[%s] proxy: \u256d%s request headers", id, strings.Repeat("\u2500", 56))
+		clog.Debug("[%s] proxy: \u256d%s request headers", id, strings.Repeat("\u2500", 56))
 
 		for hdr := range maputil.M(newReq.Header).Iter(maputil.IterOptions{
 			SortKeys: true,
 		}) {
-			log.Debugf("[%s] proxy: \u2502 ${red}%v${reset}: %v", id, hdr.K, stringutil.Elide(strings.Join(hdr.V.Strings(), ` `), 72, `…`))
+			clog.Debug("[%s] proxy: \u2502 ${red}%v${reset}: %v", id, hdr.K, stringutil.Elide(strings.Join(hdr.V.Strings(), ` `), 72, `…`))
 		}
 
-		log.Debugf("[%s] proxy: \u2570%s end request headers", id, strings.Repeat("\u2500", 56))
+		clog.Debug("[%s] proxy: \u2570%s end request headers", id, strings.Repeat("\u2500", 56))
 
 		// perform the request
 		// -----------------------------------------------------------------------------------------
-		log.Debugf("[%s] proxy: sending request to %s://%s", id, newReq.URL.Scheme, newReq.URL.Host)
+		clog.Debug("[%s] proxy: sending request to %s://%s", id, newReq.URL.Scheme, newReq.URL.Host)
 
 		var reqStartAt = time.Now()
 		response, err := self.Client.Do(newReq)
@@ -311,12 +311,12 @@ func (self *ProxyMount) openWithType(name string, req *http.Request, requestBody
 			// save error to be returned as last error.
 			errm = err
 			attempt := i + 1
-			log.Errorf("[%s] proxy: sending request to failed %s://%s", id, newReq.URL.Scheme, newReq.URL.Host)
-			log.Errorf("[%s] proxy: mounting request error on attempt %d: %v", id, attempt, err)
+			clog.Error("[%s] proxy: sending request to failed %s://%s", id, newReq.URL.Scheme, newReq.URL.Host)
+			clog.Error("[%s] proxy: mounting request error on attempt %d: %v", id, attempt, err)
 			time.Sleep(time.Duration(attempt*3) * time.Second)
 			continue // retry.
 		}
-		log.Debugf("[%s] proxy: responded in %v", id, time.Since(reqStartAt))
+		clog.Debug("[%s] proxy: responded in %v", id, time.Since(reqStartAt))
 
 		if response.Body != nil {
 			defer response.Body.Close()
@@ -341,18 +341,18 @@ func (self *ProxyMount) openWithType(name string, req *http.Request, requestBody
 			response.Header.Set(`Location`, self.RedirectOnSuccess)
 		}
 
-		log.Debugf("[%s] proxy: HTTP %v", id, response.Status)
-		log.Debugf("[%s] proxy: \u256d%s response headers", id, strings.Repeat("\u2500", 56))
+		clog.Debug("[%s] proxy: HTTP %v", id, response.Status)
+		clog.Debug("[%s] proxy: \u256d%s response headers", id, strings.Repeat("\u2500", 56))
 
 		for hdr := range maputil.M(response.Header).Iter(maputil.IterOptions{
 			SortKeys: true,
 		}) {
-			log.Debugf("[%s] proxy: \u2502 ${blue}%v${reset}: %v", id, hdr.K, stringutil.Elide(strings.Join(hdr.V.Strings(), ` `), 72, `…`))
+			clog.Debug("[%s] proxy: \u2502 ${blue}%v${reset}: %v", id, hdr.K, stringutil.Elide(strings.Join(hdr.V.Strings(), ` `), 72, `…`))
 		}
 
-		log.Debugf("[%s] proxy: \u2570%s end response headers", id, strings.Repeat("\u2500", 56))
+		clog.Debug("[%s] proxy: \u2570%s end response headers", id, strings.Repeat("\u2500", 56))
 
-		log.Infof(
+		clog.Info(
 			"[%s] proxy: %s responded with: %v (Content-Length: %v)",
 			id,
 			to,
@@ -395,15 +395,15 @@ func (self *ProxyMount) openWithType(name string, req *http.Request, requestBody
 
 		if data, err := ioutil.ReadAll(response.Body); err == nil {
 			for _, line := range stringutil.SplitLines(data, "\n") {
-				log.Debugf("[%s] proxy: [B] %s", id, line)
+				clog.Debug("[%s] proxy: [B] %s", id, line)
 			}
 		}
-		log.Debugf("[%s] proxy: %s %s: %s", id, method, newReq.URL, response.Status)
+		clog.Debug("[%s] proxy: %s %s: %s", id, method, newReq.URL, response.Status)
 		return nil, MountHaltErr
 	}
 
 	// we are here because retries failed.
-	log.Errorf("[%s] proxy: all attempts failed: %v", id, errm)
+	clog.Error("[%s] proxy: all attempts failed: %v", id, errm)
 	return nil, errm
 }
 
@@ -414,7 +414,7 @@ func (self *ProxyMount) url() string {
 		if to := self.urlRewriteTo; to != `` {
 			uri = strings.Replace(uri, from, to, 1)
 
-			log.Debugf("Rewriting %v to %v due to earlier redirect", self.urlRewriteFrom, self.urlRewriteTo)
+			clog.Debug("Rewriting %v to %v due to earlier redirect", self.urlRewriteFrom, self.urlRewriteTo)
 		}
 	}
 

@@ -40,7 +40,7 @@ func reqtime(req *http.Request, key string, took time.Duration) {
 	if id := reqid(req); id != `` {
 		if v, ok := reqTimes.Load(id); ok {
 			if timer, ok := v.(*requestTimer); ok {
-				// log.Debugf("[%v] %v=%v", id, key, took)
+				// clog.Debug("[%v] %v=%v", id, key, took)
 				timer.Times[key] = took
 			}
 		}

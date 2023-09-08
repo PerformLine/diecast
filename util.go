@@ -11,6 +11,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/PerformLine/go-clog/clog"
 	"github.com/PerformLine/go-stockutil/log"
 	"github.com/PerformLine/go-stockutil/maputil"
 	"github.com/PerformLine/go-stockutil/typeutil"
@@ -19,7 +20,7 @@ import (
 )
 
 func bugWarning() {
-	log.Warningf("BUG: no timer associated with request. Please report this at https://github.com/PerformLine/diecast")
+	clog.Warn("BUG: no timer associated with request. Please report this at https://github.com/PerformLine/diecast")
 }
 
 type xmlNode struct {

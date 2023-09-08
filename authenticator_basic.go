@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/PerformLine/go-stockutil/log"
+	"github.com/PerformLine/go-clog/clog"
 	"github.com/PerformLine/go-stockutil/pathutil"
 	"github.com/PerformLine/go-stockutil/sliceutil"
 	"github.com/PerformLine/go-stockutil/stringutil"
@@ -60,7 +60,7 @@ func (self *BasicAuthenticator) Name() string {
 
 func (self *BasicAuthenticator) AddPasswdFile(filename string) error {
 	if htp, err := htpasswd.New(filename, htpasswd.DefaultSystems, func(err error) {
-		log.Warningf("BasicAuthenticator: %v", err)
+		clog.Warn("BasicAuthenticator: %v", err)
 	}); err == nil {
 		self.htpasswd = append(self.htpasswd, htp)
 		return nil
@@ -106,7 +106,7 @@ func (self *BasicAuthenticator) Authenticate(w http.ResponseWriter, req *http.Re
 				}
 			}
 		} else {
-			log.Warningf("malformed authorization header")
+			clog.Warn("malformed authorization header")
 		}
 
 		w.WriteHeader(http.StatusForbidden)

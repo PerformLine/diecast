@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/PerformLine/go-clog/clog"
 	"github.com/PerformLine/go-stockutil/httputil"
-	"github.com/PerformLine/go-stockutil/log"
 	"github.com/PerformLine/go-stockutil/typeutil"
 	"github.com/alicebob/miniredis"
 	"github.com/stretchr/testify/require"
@@ -75,7 +75,7 @@ func TestBindingHttp(t *testing.T) {
 
 	// status code tests
 	// ---------------------------------------------------------------------------------------------
-	log.Noticef("%v/test/code/200", server.URL)
+	clog.Print("%v/test/code/200", server.URL)
 
 	var binding = &Binding{
 		Name:     `test1`,

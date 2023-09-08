@@ -13,8 +13,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/PerformLine/go-clog/clog"
 	"github.com/PerformLine/go-stockutil/httputil"
-	"github.com/PerformLine/go-stockutil/log"
 	"github.com/PerformLine/go-stockutil/typeutil"
 	"github.com/PuerkitoBio/goquery"
 )
@@ -83,7 +83,7 @@ func (self *CSRF) GetCookieName() string {
 
 func (self *CSRF) Handle(w http.ResponseWriter, req *http.Request) bool {
 	if self.Enable {
-		log.Debugf("[%s] middleware: check csrf", reqid(req))
+		clog.Debug("[%s] middleware: check csrf", reqid(req))
 		self.generateTokenForRequest(w, req, false)
 
 		switch req.Method {
@@ -120,7 +120,7 @@ func (self *CSRF) Handle(w http.ResponseWriter, req *http.Request) bool {
 					return false
 				}
 			} else {
-				log.Infof("[%s] path %q exempted from CSRF protection", reqid(req), req.URL.Path)
+				clog.Info("[%s] path %q exempted from CSRF protection", reqid(req), req.URL.Path)
 			}
 		}
 	}
@@ -316,7 +316,7 @@ func (self *Server) middlewareCsrf(w http.ResponseWriter, req *http.Request) boo
 								csrf.InjectFormFieldTemplate = DefaultCsrfInjectFieldFormat
 							}
 
-							log.Debugf("[%s] injecting form field", reqid(req))
+							clog.Debug("[%s] injecting form field", reqid(req))
 
 							var start = time.Now()
 							defer reqtime(req, `csrf-inject`, time.Since(start))

@@ -10,8 +10,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/PerformLine/go-clog/clog"
 	"github.com/PerformLine/go-stockutil/httputil"
-	"github.com/PerformLine/go-stockutil/log"
 	"github.com/PerformLine/go-webfriend"
 	"github.com/PerformLine/go-webfriend/browser"
 	wfcore "github.com/PerformLine/go-webfriend/commands/core"
@@ -67,7 +67,7 @@ func (self *PdfRenderer) Render(w http.ResponseWriter, req *http.Request, option
 		subqs.Set(`__subrender`, `true`)
 		suburl.RawQuery = subqs.Encode()
 
-		log.Debugf("Rendering %v as PDF", suburl)
+		clog.Debug("Rendering %v as PDF", suburl)
 
 		var core = env.MustModule(`core`).(*wfcore.Commands)
 		var page = env.MustModule(`page`).(*wfpage.Commands)
@@ -110,7 +110,7 @@ func (self *PdfRenderer) Render(w http.ResponseWriter, req *http.Request, option
 			return err
 		}
 	} else {
-		log.Fatalf("could not generate PDF: %v", err)
+		clog.Fatal("could not generate PDF: %v", err)
 		return err
 	}
 }

@@ -8,9 +8,9 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/PerformLine/go-clog/clog"
 	"github.com/PerformLine/go-stockutil/fileutil"
 	"github.com/PerformLine/go-stockutil/httputil"
-	"github.com/PerformLine/go-stockutil/log"
 	"github.com/PerformLine/go-stockutil/sliceutil"
 	"github.com/PerformLine/go-stockutil/typeutil"
 )
@@ -62,12 +62,12 @@ func (self *Server) handleRequest(w http.ResponseWriter, req *http.Request) {
 
 		// search for local files and autoindex opportunities
 		for _, rPath := range requestPaths {
-			// log.Debugf("[%s] try local file: %s", id, rPath)
+			// clog.Debug("[%s] try local file: %s", id, rPath)
 
 			// actually try to stat the file from the filesystem rooted at RootPath
 			if file, mimetype, err := self.tryLocalFile(rPath, req); err == nil {
 				if localCandidate == nil {
-					// log.Debugf("[%s] found local file: %s", id, rPath)
+					// clog.Debug("[%s] found local file: %s", id, rPath)
 					localCandidate = &candidateFile{
 						Type:     `local`,
 						Source:   httpFilename(file),
@@ -81,7 +81,7 @@ func (self *Server) handleRequest(w http.ResponseWriter, req *http.Request) {
 			} else if IsDirectoryErr(err) && self.Autoindex {
 				if file, mimetype, ok := self.tryAutoindex(); ok {
 					if autoindexCandidate == nil {
-						// log.Debugf("[%s] found autoindex template for %s", id, rPath)
+						// clog.Debug("[%s] found autoindex template for %s", id, rPath)
 						autoindexCandidate = &candidateFile{
 							Type:          `autoindex`,
 							Source:        httpFilename(file),
@@ -101,7 +101,7 @@ func (self *Server) handleRequest(w http.ResponseWriter, req *http.Request) {
 			for _, rPath := range requestPaths {
 				if mount, mountResponse, err := self.tryMounts(rPath, req); err == nil && mountResponse != nil {
 					if mountCandidate == nil {
-						// log.Debugf("[%s] found mount response: %s", id, rPath)
+						// clog.Debug("[%s] found mount response: %s", id, rPath)
 						mountCandidate = &candidateFile{
 							Type:         `mount`,
 							Source:       mountSummary(mount),
@@ -160,7 +160,7 @@ func (self *Server) handleRequest(w http.ResponseWriter, req *http.Request) {
 			}
 
 			if serveFile != nil {
-				log.Debugf("[%s] found: %s (%v)", id, serveFile.Type, serveFile.Source)
+				clog.Debug("[%s] found: %s (%v)", id, serveFile.Type, serveFile.Source)
 
 				if strings.Contains(serveFile.Path, `__id.`) {
 					var value = strings.Trim(path.Base(req.URL.Path), `/`)
@@ -177,7 +177,7 @@ func (self *Server) handleRequest(w http.ResponseWriter, req *http.Request) {
 					}
 
 					http.Redirect(w, req, serveFile.RedirectTo, rcode)
-					log.Debugf("[%s] path %v redirecting to %v (HTTP %d)", id, serveFile.Path, serveFile.RedirectTo, rcode)
+					clog.Debug("[%s] path %v redirecting to %v (HTTP %d)", id, serveFile.Path, serveFile.RedirectTo, rcode)
 					return
 				} else if handled := self.handleCandidateFile(w, req, serveFile); handled {
 					return

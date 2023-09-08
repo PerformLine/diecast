@@ -10,8 +10,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/PerformLine/go-clog/clog"
 	"github.com/PerformLine/go-stockutil/httputil"
-	"github.com/PerformLine/go-stockutil/log"
 	"github.com/PerformLine/go-stockutil/maputil"
 	"github.com/PerformLine/go-stockutil/stringutil"
 	"github.com/PerformLine/go-stockutil/typeutil"
@@ -73,7 +73,7 @@ func (self *ShellAuthenticator) Authenticate(w http.ResponseWriter, req *http.Re
 
 	if req.ContentLength != 0 {
 		if err := httputil.ParseRequest(req, &body); err != nil {
-			log.Warningf("[%s] %T: parse error: %v", id, self, err)
+			clog.Warn("[%s] %T: parse error: %v", id, self, err)
 			return false
 		}
 	}
@@ -102,11 +102,11 @@ func (self *ShellAuthenticator) Authenticate(w http.ResponseWriter, req *http.Re
 		if args, err := shellwords.Parse(cmdline); err == nil {
 			cmd = exec.Command(args[0], args[1:]...)
 		} else {
-			log.Warningf("[%s] %T: invalid command: %v", id, self, err)
+			clog.Warn("[%s] %T: invalid command: %v", id, self, err)
 			return false
 		}
 	} else {
-		log.Warningf("[%s] %T: empty command", id, self)
+		clog.Warn("[%s] %T: empty command", id, self)
 		return false
 	}
 
@@ -125,7 +125,7 @@ func (self *ShellAuthenticator) Authenticate(w http.ResponseWriter, req *http.Re
 			cmd.Env = append(cmd.Env, fmt.Sprintf("DIECAST_AUTH_BODY_%s=%v", strings.ToUpper(stringutil.Underscore(k)), v))
 		}
 	} else {
-		log.Warningf("[%s] %T: body parse error: %v", id, self, err)
+		clog.Warn("[%s] %T: body parse error: %v", id, self, err)
 		return false
 	}
 
@@ -149,7 +149,7 @@ func (self *ShellAuthenticator) Authenticate(w http.ResponseWriter, req *http.Re
 	if err := cmd.Run(); err == nil {
 		// print any error output that came out
 		for _, line := range strings.Split(stderr.String(), "\n") {
-			log.Warningf("[%s] %T: error: %s", id, self, line)
+			clog.Warn("[%s] %T: error: %s", id, self, line)
 		}
 
 		// prep the cookie

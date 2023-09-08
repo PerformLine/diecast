@@ -29,9 +29,9 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/PerformLine/go-clog/clog"
 	"github.com/PerformLine/go-stockutil/fileutil"
 	"github.com/PerformLine/go-stockutil/httputil"
-	"github.com/PerformLine/go-stockutil/log"
 	"github.com/PerformLine/go-stockutil/maputil"
 	"github.com/PerformLine/go-stockutil/netutil"
 	"github.com/PerformLine/go-stockutil/pathutil"
@@ -267,7 +267,6 @@ type Server struct {
 	VerifyFile          string                    `yaml:"verifyFile"              json:"verifyFile"`              // A file that must exist and be readable before starting the server.
 	PreserveConnections bool                      `yaml:"preserveConnections"     json:"preserveConnections"`     // Don't add the "Connection: close" header to every response.
 	CSRF                *CSRF                     `yaml:"csrf"                    json:"csrf"`                    // configures CSRF protection
-	Log                 LogConfig                 `yaml:"log"                     json:"log"`                     // configure logging
 	BeforeHandlers      []Middleware              `yaml:"-"                       json:"-"`                       // contains a stack of Middleware functions that are run before handling the request
 	AfterHandlers       []http.HandlerFunc        `yaml:"-"                       json:"-"`                       // contains a stack of HandlerFuncs that are run after handling the request.  These functions cannot stop the request, as it's already been written to the client.
 	Protocol            string                    `yaml:"protocol"                json:"protocol"`                // Specify which HTTP protocol to use ("http", "http2", "quic", "http3")
@@ -320,13 +319,8 @@ func NewServer(root interface{}, patterns ...string) *Server {
 		GlobalHeaders:      make(map[string]interface{}),
 		Protocol:           DefaultProtocol,
 		BindingTimeout:     DefaultBindingTimeout,
-		Log: LogConfig{
-			Format:      logFormats[`common`],
-			Destination: `-`,
-			Colorize:    true,
-		},
-		mux:        http.NewServeMux(),
-		userRouter: vestigo.NewRouter(),
+		mux:                http.NewServeMux(),
+		userRouter:         vestigo.NewRouter(),
 	}
 
 	if str, ok := root.(string); ok {
@@ -389,7 +383,7 @@ func (self *Server) LoadConfig(filename string) error {
 							}
 
 							if mountOverwriteIndex >= 0 {
-								log.Debugf("mount: overwriting mountpoint with new configuration: %v", mount)
+								clog.Debug("mount: overwriting mountpoint with new configuration: %v", mount)
 								self.Mounts[mountOverwriteIndex] = mount
 							} else {
 								self.Mounts = append(self.Mounts, mount)
@@ -487,7 +481,7 @@ func (self *Server) Initialize() error {
 	self.initialized = true
 
 	if self.DisableCommands {
-		log.Noticef("Not executing PrestartCommand because DisableCommands is set")
+		clog.Print("Not executing PrestartCommand because DisableCommands is set")
 		return nil
 	} else if _, err := self.RunStartCommand(self.PrestartCommands, false); err != nil {
 		return err
@@ -505,7 +499,7 @@ func (self *Server) prestart() error {
 
 	go func() {
 		if self.DisableCommands {
-			log.Noticef("Not executing StartCommand because DisableCommands is set")
+			clog.Print("Not executing StartCommand because DisableCommands is set")
 			return
 		}
 
@@ -519,7 +513,7 @@ func (self *Server) prestart() error {
 		}
 
 		if err != nil {
-			log.Errorf("start command failed: %v", err)
+			clog.Error("start command failed: %v", err)
 		}
 	}()
 
@@ -628,12 +622,12 @@ func (self *Server) initJaegerTracing() error {
 			}
 
 			if logline != `` {
-				log.Debugf("trace: Jaeger tracing enabled: service=%s send to %s", self.jaegerCfg.ServiceName, logline)
+				clog.Debug("trace: Jaeger tracing enabled: service=%s send to %s", self.jaegerCfg.ServiceName, logline)
 
 				if len(self.jaegerCfg.Tags) > 0 {
-					log.Debugf("trace: global tags:")
+					clog.Debug("trace: global tags:")
 					for _, tag := range self.jaegerCfg.Tags {
-						log.Debugf("trace: + %s: %v", tag.Key, typeutil.V(tag.Value))
+						clog.Debug("trace: + %s: %v", tag.Key, typeutil.V(tag.Value))
 					}
 				}
 			}
@@ -888,7 +882,7 @@ func (self *Server) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	// process the before stack
 	for i, before := range self.BeforeHandlers {
 		if proceed := before(interceptor, req); !proceed {
-			log.Debugf(
+			clog.Debug(
 				"[%s] processing halted by middleware %d (msg: %v)",
 				reqid(req),
 				i,
@@ -1103,7 +1097,7 @@ func (self *Server) applyTemplate(
 							finalHeader.Switch[i] = nil
 
 							if fh, err := finalHeader.Merge(swHeader); err == nil {
-								log.Debugf("[%s] Switch case %d matched, switching to template %v", reqid(req), i, swcase.UsePath)
+								clog.Debug("[%s] Switch case %d matched, switching to template %v", reqid(req), i, swcase.UsePath)
 
 								return self.applyTemplate(
 									w,
@@ -1195,7 +1189,7 @@ func (self *Server) applyTemplate(
 
 				if err == nil {
 					// run the final template render and return
-					log.Debugf("[%s] Rendering using %T", reqid(req), postTemplateRenderer)
+					clog.Debug("[%s] Rendering using %T", reqid(req), postTemplateRenderer)
 
 					postTemplateRenderer.SetPrewriteFunc(func(r *http.Request) {
 						reqtime(r, `tpl`, time.Since(start))
@@ -1220,7 +1214,7 @@ func (self *Server) applyTemplate(
 			return err
 		}
 	} else if redir, ok := err.(RedirectTo); ok {
-		log.Debugf("[%s] Performing 307 Temporary Redirect to %v due to binding response handler.", reqid(req), redir)
+		clog.Debug("[%s] Performing 307 Temporary Redirect to %v due to binding response handler.", reqid(req), redir)
 		writeRequestTimerHeaders(self, w, req)
 		http.Redirect(w, req, redir.Error(), http.StatusTemporaryRedirect)
 		return nil
@@ -1539,7 +1533,7 @@ func (self *Server) GetTemplateFunctions(data map[string]interface{}, header *Te
 				locales = append(locales, tag.String())
 				locales = append(locales, i18nTagBase(tag))
 			} else {
-				log.Warningf("i18n: invalid header locale %q", header.Locale)
+				clog.Warn("i18n: invalid header locale %q", header.Locale)
 			}
 		}
 
@@ -1549,7 +1543,7 @@ func (self *Server) GetTemplateFunctions(data map[string]interface{}, header *Te
 				locales = append(locales, tag.String())
 				locales = append(locales, i18nTagBase(tag))
 			} else {
-				log.Warningf("i18n: invalid global locale %q", self.Locale)
+				clog.Warn("i18n: invalid global locale %q", self.Locale)
 			}
 		}
 
@@ -1566,7 +1560,7 @@ func (self *Server) GetTemplateFunctions(data map[string]interface{}, header *Te
 					locales = append(locales, i18nTagBase(tag))
 				}
 			} else {
-				log.Warningf("i18n: invalid Accept-Language value %q", acceptLanguage)
+				clog.Warn("i18n: invalid Accept-Language value %q", acceptLanguage)
 			}
 		}
 
@@ -1588,7 +1582,7 @@ func (self *Server) GetTemplateFunctions(data map[string]interface{}, header *Te
 						locales = append(locales, tag.String())
 						locales = append(locales, i18nTagBase(tag))
 					} else {
-						log.Warningf("i18n: invalid locale in envvar %s", ev)
+						clog.Warn("i18n: invalid locale in envvar %s", ev)
 					}
 				}
 			}
@@ -1814,7 +1808,7 @@ func (self *Server) GetTemplateData(req *http.Request, header *TemplateHeader) (
 
 					soFar += count
 
-					log.Debugf("[%v] paginated binding %q: total=%v count=%v soFar=%v", reqid(req), binding.Name, total, count, soFar)
+					clog.Debug("[%v] paginated binding %q: total=%v count=%v soFar=%v", reqid(req), binding.Name, total, count, soFar)
 
 					if v, err := EvalInline(pgConfig.Done, asMap.MapNative(), funcs, suffix); err == nil {
 						proceed = !typeutil.Bool(v)
@@ -1827,7 +1821,7 @@ func (self *Server) GetTemplateData(req *http.Request, header *TemplateHeader) (
 					}
 
 					if !proceed {
-						log.Debugf("[%v] paginated binding %q: proceed is false, this is the last loop", reqid(req), binding.Name)
+						clog.Debug("[%v] paginated binding %q: proceed is false, this is the last loop", reqid(req), binding.Name)
 					}
 
 					var thisPage = maputil.M(&ResultsPage{
@@ -1858,7 +1852,7 @@ func (self *Server) GetTemplateData(req *http.Request, header *TemplateHeader) (
 					return funcs, nil, redir
 				} else {
 					if err != ErrSkipEval {
-						log.Warningf("[%s] Binding %q (iteration %d) failed: %v", reqid(req), binding.Name, i, err)
+						clog.Warn("[%s] Binding %q (iteration %d) failed: %v", reqid(req), binding.Name, i, err)
 					}
 
 					if binding.OnError == ActionContinue {
@@ -1892,7 +1886,7 @@ func (self *Server) GetTemplateData(req *http.Request, header *TemplateHeader) (
 				bindings[binding.Name] = binding.Fallback
 			} else {
 				if err != ErrSkipEval {
-					log.Warningf("[%s] Binding %q failed: %v", reqid(req), binding.Name, err)
+					clog.Warn("[%s] Binding %q failed: %v", reqid(req), binding.Name, err)
 				}
 
 				if !binding.Optional {
@@ -1913,7 +1907,7 @@ func (self *Server) GetTemplateData(req *http.Request, header *TemplateHeader) (
 				return nil, nil, fmt.Errorf("repeater: %v", err)
 			}
 
-			log.Debugf("Repeater: \n%v\nOutput:\n%v", repeatExpr, repeatExprOut)
+			clog.Debug("Repeater: \n%v\nOutput:\n%v", repeatExpr, repeatExprOut)
 			var repeatIters = strings.Split(repeatExprOut, "\n")
 
 			for i, resource := range repeatIters {
@@ -1930,7 +1924,7 @@ func (self *Server) GetTemplateData(req *http.Request, header *TemplateHeader) (
 				} else if redir, ok := err.(RedirectTo); ok {
 					return funcs, nil, redir
 				} else {
-					log.Warningf("Binding %q (iteration %d) failed: %v", binding.Name, i, err)
+					clog.Warn("Binding %q (iteration %d) failed: %v", binding.Name, i, err)
 
 					if binding.OnError == ActionContinue {
 						continue
@@ -2022,7 +2016,7 @@ func (self *Server) tryMounts(requestPath string, req *http.Request) (Mount, *Mo
 	// buffer the request body because we need to repeatedly pass it to multiple mounts
 	if data, err := ioutil.ReadAll(req.Body); err == nil {
 		if len(data) > 0 {
-			log.Debugf("[%s] process mounts: buffered %d bytes from request body", reqid(req), len(data))
+			clog.Debug("[%s] process mounts: buffered %d bytes from request body", reqid(req), len(data))
 		}
 
 		body = bytes.NewReader(data)
@@ -2046,7 +2040,7 @@ func (self *Server) tryMounts(requestPath string, req *http.Request) (Mount, *Mo
 			lastErr = err
 
 			if err == nil {
-				log.Debugf("mount %v handled %q", mount.GetMountPoint(), requestPath)
+				clog.Debug("mount %v handled %q", mount.GetMountPoint(), requestPath)
 				return mount, mountResponse, nil
 			} else if IsHardStop(err) {
 				return nil, nil, err
@@ -2102,10 +2096,10 @@ func (self *Server) respondError(w http.ResponseWriter, req *http.Request, resEr
 				if err := tmpl.renderWithRequest(req, w, errorData, ``); err == nil {
 					return
 				} else {
-					log.Warningf("Error template %v render failed: %v", filename, err)
+					clog.Warn("Error template %v render failed: %v", filename, err)
 				}
 			} else {
-				log.Warningf("Error template %v failed: %v", filename, err)
+				clog.Warn("Error template %v failed: %v", filename, err)
 			}
 		}
 	}
@@ -2149,7 +2143,7 @@ func (self *Server) appendIncludes(fragments *FragmentSet, header *TemplateHeade
 			if includeFile, err := self.fs.Open(includePath); err == nil {
 				defer includeFile.Close()
 
-				log.Debugf("Include template %q from file %s", name, includePath)
+				clog.Debug("Include template %q from file %s", name, includePath)
 				fragments.Parse(name, includeFile)
 			} else {
 				return err
@@ -2188,12 +2182,12 @@ func (self *Server) actionForRequest(req *http.Request) http.HandlerFunc {
 			var methods = sliceutil.Stringify(action.Method)
 
 			if len(methods) == 0 && req.Method == http.MethodGet {
-				log.Debugf("Action handler: %s %s", http.MethodGet, action.Path)
+				clog.Debug("Action handler: %s %s", http.MethodGet, action.Path)
 				return action.ServeHTTP
 			} else {
 				for _, method := range methods {
 					if req.Method == strings.ToUpper(method) {
-						log.Debugf("Action handler: %s %s", req.Method, action.Path)
+						clog.Debug("Action handler: %s %s", req.Method, action.Path)
 						return action.ServeHTTP
 					}
 				}
@@ -2430,7 +2424,7 @@ func (self *Server) RunStartCommand(scmds []*StartCommand, waitForCommand bool) 
 				}
 
 				if prewait, err := timeutil.ParseDuration(scmd.WaitBefore); err == nil && prewait > 0 {
-					log.Infof("Waiting %v before running command", prewait)
+					clog.Info("Waiting %v before running command", prewait)
 					time.Sleep(prewait)
 				}
 
@@ -2438,7 +2432,7 @@ func (self *Server) RunStartCommand(scmds []*StartCommand, waitForCommand bool) 
 					var waitchan = make(chan error)
 
 					go func() {
-						log.Infof("Executing command: %v", strings.Join(scmd.cmd.Args, ` `))
+						clog.Info("Executing command: %v", strings.Join(scmd.cmd.Args, ` `))
 						waitchan <- scmd.cmd.Run()
 					}()
 
@@ -2504,61 +2498,9 @@ func (self *Server) cleanupCommands() {
 // called by the cleanup middleware to log the completed request according to LogFormat.
 func (self *Server) logreq(w http.ResponseWriter, req *http.Request) {
 	if tm := getRequestTimer(req); tm != nil {
-		var format = logFormats[self.Log.Format]
-
-		if format == `` {
-			if self.Log.Format != `` {
-				format = self.Log.Format
-			} else {
-				return
-			}
-		}
-
-		if self.logwriter == nil {
-			// discard by default, unless some brave configuration below changes this
-			self.logwriter = ioutil.Discard
-
-			switch lf := strings.ToLower(self.Log.Destination); lf {
-			case ``, `none`, `false`:
-				return
-			case `-`, `stdout`:
-				self.isTerminalOutput = true
-				self.logwriter = os.Stdout
-			case `stderr`:
-				self.isTerminalOutput = true
-				self.logwriter = os.Stderr
-			case `syslog`:
-				log.Warningf("logfile: %q destination is not implemented", lf)
-				return
-			default:
-				if self.Log.Truncate {
-					os.Truncate(self.Log.Destination, 0)
-				}
-
-				if f, err := os.OpenFile(self.Log.Destination, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644); err == nil {
-					self.logwriter = f
-				} else {
-					log.Warningf("logfile: failed to open logfile: %v", err)
-					return
-				}
-			}
-		}
-
-		var interceptor = reqres(req)
 		rh, rp := stringutil.SplitPair(req.RemoteAddr, `:`)
+		var interceptor = reqres(req)
 		var code = typeutil.String(interceptor.code)
-
-		if self.isTerminalOutput && self.Log.Colorize {
-			if interceptor.code < 300 {
-				code = log.CSprintf("${green}%d${reset}", interceptor.code)
-			} else if interceptor.code < 400 {
-				code = log.CSprintf("${cyan}%d${reset}", interceptor.code)
-			} else if interceptor.code < 500 {
-				code = log.CSprintf("${yellow}%d${reset}", interceptor.code)
-			} else {
-				code = log.CSprintf("${red}%d${reset}", interceptor.code)
-			}
-		}
 
 		var logContext = maputil.M(map[string]interface{}{
 			`host`:                req.Host,
@@ -2581,7 +2523,7 @@ func (self *Server) logreq(w http.ResponseWriter, req *http.Request) {
 			`url`:                 req.URL.String(),
 		})
 
-		logContext.Fprintf(self.logwriter, format)
+		clog.With("log-context", logContext).Info("Request completed")
 	} else {
 		bugWarning()
 	}

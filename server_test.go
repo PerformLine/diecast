@@ -20,7 +20,7 @@ func doTestServerRequest(s *Server, method string, path string, tester func(*htt
 	s.ServeHTTP(w, req)
 
 	// if w.Code >= 400 {
-	// 	log.Errorf("Response %d: %s", w.Code, w.Body.String())
+	// 	clog.Error("Response %d: %s", w.Code, w.Body.String())
 	// }
 
 	tester(w)
