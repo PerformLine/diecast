@@ -352,13 +352,59 @@ func (self *ProxyMount) openWithType(name string, req *http.Request, requestBody
 
 		clog.Debug("[%s] proxy: \u2570%s end response headers", id, strings.Repeat("\u2500", 56))
 
-		clog.Info(
-			"[%s] proxy: %s responded with: %v (Content-Length: %v)",
-			id,
-			to,
-			response.Status,
-			response.ContentLength,
-		)
+		if tm := getRequestTimer(req); tm != nil {
+			rh, rp := stringutil.SplitPair(req.RemoteAddr, `:`)
+			var interceptor = reqres(req)
+			var code = typeutil.String(interceptor.code)
+			var logContext = maputil.M(map[string]interface{}{
+				`host`:                req.Host,
+				`method`:              req.Method,
+				`protocol_major`:      req.ProtoMajor,
+				`protocol_minor`:      req.ProtoMinor,
+				`protocol`:            req.Proto,
+				`remote_address`:      rh,
+				`remote_address_port`: typeutil.Int(rp),
+				`request_id`:          reqid(req),
+				`request_length`:      req.ContentLength,
+				`request_started_at`:  tm.StartedAt,
+				`duration`:            httputil.RequestGetValue(req, `duration`).Duration(),
+				`response_length`:     interceptor.bytesWritten,
+				`scheme`:              req.URL.Scheme,
+				`status_code`:         code,
+				`status_text`:         http.StatusText(interceptor.code),
+				`url_hostname`:        req.URL.Hostname(),
+				`url_port`:            typeutil.Int(req.URL.Port()),
+				`url`:                 req.URL.String(),
+			})
+
+			clogStackDisabled, _ := clog.Clone()
+			clogStackDisabled.DisableStacktrace()
+			if response.StatusCode < 400 {
+				clog.With("log-context", logContext).Info(
+					"[%s] proxy: %s responded with: %v (Content-Length: %v)",
+					id,
+					to,
+					response.Status,
+					response.ContentLength,
+				)
+			} else if response.StatusCode < 500 {
+				clogStackDisabled.With("log-context", logContext).Error(
+					"[%s] proxy: %s responded with: %v (Content-Length: %v)",
+					id,
+					to,
+					response.Status,
+					response.ContentLength,
+				)
+			} else {
+				clog.With("log-context", logContext).Error(
+					"[%s] proxy: %s responded with: %v (Content-Length: %v)",
+					id,
+					to,
+					response.Status,
+					response.ContentLength,
+				)
+			}
+		}
 
 		if response.StatusCode < 400 || self.PassthroughErrors {
 			var responseBody io.Reader
