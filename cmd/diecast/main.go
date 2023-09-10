@@ -34,7 +34,7 @@ func main() {
 		logLevel = clog.StringToLogLevel(logLevelEnv)
 	}
 
-	if os.Getenv("UPLOAD_LOG_FORMAT") == "text" {
+	if os.Getenv("LOG_FORMAT") == "text" {
 		logFormat = clog.FormatConsole
 	}
 
