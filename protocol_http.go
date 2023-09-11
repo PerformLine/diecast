@@ -189,6 +189,9 @@ func (self *HttpProtocol) Retrieve(rr *ProtocolRequest) (*ProtocolResponse, erro
 		}
 
 		request.Header.Set(`X-Diecast-Binding`, rr.Binding.Name)
+		for _, addr := range rr.Request.Header.Values("X-Forwarded-For") {
+			request.Header.Add("X-Forwarded-For", addr)
+		}
 
 		// big block of custom TLS override setup
 		// -------------------------------------------------------------------------------------
