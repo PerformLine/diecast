@@ -2523,12 +2523,8 @@ func (self *Server) logreq(w http.ResponseWriter, req *http.Request) {
 			`url`:                 req.URL.String(),
 		})
 
-		clogStackDisabled, _ := clog.Clone()
-		clogStackDisabled.DisableStacktrace()
 		if interceptor.code < 400 {
 			clog.With("log-context", logContext).Info("%s %s", req.Method, req.URL.Path)
-		} else if interceptor.code < 500 {
-			clogStackDisabled.With("log-context", logContext).Error("%s %s", req.Method, req.URL.Path)
 		} else {
 			clog.With("log-context", logContext).Error("%s %s", req.Method, req.URL.Path)
 		}

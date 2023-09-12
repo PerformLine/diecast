@@ -377,18 +377,8 @@ func (self *ProxyMount) openWithType(name string, req *http.Request, requestBody
 				`url`:                 req.URL.String(),
 			})
 
-			clogStackDisabled, _ := clog.Clone()
-			clogStackDisabled.DisableStacktrace()
 			if response.StatusCode < 400 {
 				clog.With("log-context", logContext).Info(
-					"[%s] proxy: %s responded with: %v (Content-Length: %v)",
-					id,
-					to,
-					response.Status,
-					response.ContentLength,
-				)
-			} else if response.StatusCode < 500 {
-				clogStackDisabled.With("log-context", logContext).Error(
 					"[%s] proxy: %s responded with: %v (Content-Length: %v)",
 					id,
 					to,

@@ -3,7 +3,7 @@ module github.com/PerformLine/diecast
 go 1.20
 
 require (
-	github.com/PerformLine/go-clog v1.0.4
+	github.com/PerformLine/go-clog v1.0.5
 	github.com/PerformLine/go-stockutil v1.9.5
 	github.com/PerformLine/go-webfriend v1.10.0
 	github.com/PerformLine/ratelimit v1.1.1
@@ -83,6 +83,7 @@ require (
 	github.com/jlaffaye/ftp v0.2.0 // indirect
 	github.com/jsummers/gobmp v0.0.0-20230614200233-a9de23ed2e25 // indirect
 	github.com/juliangruber/go-intersect v1.1.0 // indirect
+	github.com/klauspost/compress v1.16.7 // indirect
 	github.com/kr/fs v0.1.0 // indirect
 	github.com/mafredri/cdp v0.34.1 // indirect
 	github.com/martinlindhe/unit v0.0.0-20230420213220-4adfd7d0a0d6 // indirect
@@ -106,11 +107,13 @@ require (
 	github.com/quic-go/qpack v0.4.0 // indirect
 	github.com/quic-go/qtls-go1-20 v0.3.4 // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
+	github.com/sergi/go-diff v1.3.1 // indirect
 	github.com/stretchr/objx v0.5.1 // indirect
 	github.com/uber/jaeger-lib v2.4.1+incompatible // indirect
 	github.com/urfave/negroni v1.0.1-0.20191011213438-f4316798d5d3 // indirect
-	github.com/yuin/gopher-lua v0.0.0-20210529063254-f4c35e4016d9 // indirect
+	github.com/yuin/gopher-lua v1.1.0 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
+	go.uber.org/goleak v1.2.1 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.25.0 // indirect
 	golang.org/x/crypto v0.13.0 // indirect
