@@ -14,8 +14,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/PerformLine/go-clog/clog"
 	"github.com/PerformLine/go-stockutil/httputil"
-	"github.com/PerformLine/go-stockutil/log"
 	"github.com/PerformLine/go-stockutil/maputil"
 	"github.com/PerformLine/go-stockutil/sliceutil"
 	"github.com/PerformLine/go-stockutil/stringutil"
@@ -60,7 +60,7 @@ func (self *HttpProtocol) Retrieve(rr *ProtocolRequest) (*ProtocolResponse, erro
 				}
 			}
 
-			log.Debugf("[%s]  binding %q: param %v=%v", id, rr.Binding.Name, k, vS)
+			clog.Debug("[%s]  binding %q: param %v=%v", id, rr.Binding.Name, k, vS)
 			qs.Set(k, vS)
 		}
 
@@ -102,7 +102,7 @@ func (self *HttpProtocol) Retrieve(rr *ProtocolRequest) (*ProtocolResponse, erro
 
 					return nil
 				}); err == nil {
-					log.Debugf("[%s]  binding %q: bodyparam %#v", id, rr.Binding.Name, bodyParams)
+					clog.Debug("[%s]  binding %q: bodyparam %#v", id, rr.Binding.Name, bodyParams)
 				} else {
 					return nil, err
 				}
@@ -151,7 +151,7 @@ func (self *HttpProtocol) Retrieve(rr *ProtocolRequest) (*ProtocolResponse, erro
 				return nil, fmt.Errorf("rawbody: %v", err)
 			}
 
-			log.Debugf("[%s]  binding %q: rawbody (%d bytes)", id, rr.Binding.Name, len(payload))
+			clog.Debug("[%s]  binding %q: rawbody (%d bytes)", id, rr.Binding.Name, len(payload))
 			request.Body = ioutil.NopCloser(bytes.NewBuffer(payload))
 		}
 
@@ -162,7 +162,7 @@ func (self *HttpProtocol) Retrieve(rr *ProtocolRequest) (*ProtocolResponse, erro
 		if !rr.Binding.SkipInheritHeaders {
 			for k, _ := range rr.Request.Header {
 				var v = rr.Request.Header.Get(k)
-				log.Debugf("[%s]  binding %q: inherit %v=%v", id, rr.Binding.Name, k, v)
+				clog.Debug("[%s]  binding %q: inherit %v=%v", id, rr.Binding.Name, k, v)
 				request.Header.Set(k, v)
 			}
 		}
@@ -177,7 +177,7 @@ func (self *HttpProtocol) Retrieve(rr *ProtocolRequest) (*ProtocolResponse, erro
 				}
 			}
 
-			log.Debugf("[%s]  binding %q:  header %v=%v", id, rr.Binding.Name, k, v)
+			clog.Debug("[%s]  binding %q:  header %v=%v", id, rr.Binding.Name, k, v)
 			request.Header.Add(k, v)
 		}
 
@@ -252,11 +252,11 @@ func (self *HttpProtocol) Retrieve(rr *ProtocolRequest) (*ProtocolResponse, erro
 			BindingClient.Timeout = DefaultBindingTimeout
 		}
 
-		log.Debugf("[%s]  binding: timeout=%v", id, BindingClient.Timeout)
+		clog.Debug("[%s]  binding: timeout=%v", id, BindingClient.Timeout)
 
 		if request.URL.Scheme == `https` && rr.Binding.Insecure {
-			log.Noticef("[%s] SSL/TLS certificate validation is disabled for this request.", id)
-			log.Noticef("[%s] This is insecure as the response can be tampered with.", id)
+			clog.Print("[%s] SSL/TLS certificate validation is disabled for this request.", id)
+			clog.Print("[%s] This is insecure as the response can be tampered with.", id)
 		}
 
 		// end TLS setup
@@ -275,7 +275,7 @@ func (self *HttpProtocol) Retrieve(rr *ProtocolRequest) (*ProtocolResponse, erro
 			if purl != `` {
 				if u, err := url.Parse(purl); err == nil {
 					transport.Proxy = http.ProxyURL(u)
-					log.Noticef("[%s] Proxy URL is: %v", id, u)
+					clog.Print("[%s] Proxy URL is: %v", id, u)
 				} else {
 					return nil, fmt.Errorf("invalid proxy URL: %v", err)
 				}
@@ -288,11 +288,11 @@ func (self *HttpProtocol) Retrieve(rr *ProtocolRequest) (*ProtocolResponse, erro
 		// perform binding request
 		// -------------------------------------------------------------------------------------
 		if res, err := BindingClient.Do(request); err == nil {
-			log.Infof("[%s] Binding: < HTTP %d (body: %d bytes)", id, res.StatusCode, res.ContentLength)
+			clog.Info("[%s] Binding: < HTTP %d (body: %d bytes)", id, res.StatusCode, res.ContentLength)
 
 			// debug log response headers
 			for k, v := range res.Header {
-				log.Debugf("[%s]  [H] %v: %v", id, k, strings.Join(v, ` `))
+				clog.Debug("[%s]  [H] %v: %v", id, k, strings.Join(v, ` `))
 			}
 
 			// stub out the response
@@ -324,9 +324,9 @@ func (self *HttpProtocol) Retrieve(rr *ProtocolRequest) (*ProtocolResponse, erro
 			return response, nil
 		} else {
 			if res != nil && res.StatusCode > 0 {
-				log.Warningf("[%s] Binding: < HTTP %d (body: %d bytes)", id, res.StatusCode, res.ContentLength)
+				clog.Warn("[%s] Binding: < HTTP %d (body: %d bytes)", id, res.StatusCode, res.ContentLength)
 			} else {
-				log.Warningf("[%s] Binding: < error: %v", id, err)
+				clog.Warn("[%s] Binding: < error: %v", id, err)
 			}
 
 			return nil, err

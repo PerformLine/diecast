@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/PerformLine/go-stockutil/log"
+	"github.com/PerformLine/go-clog/clog"
 	"github.com/ghodss/yaml"
 )
 
@@ -55,7 +55,7 @@ func (self *TemplateRenderer) Render(w http.ResponseWriter, req *http.Request, o
 	}
 
 	if err := tmpl.ParseFragments(options.Fragments); err == nil {
-		log.Debugf("[%s] Rendering %q as %v template", reqid(req), options.RequestedPath, tmpl.Engine())
+		clog.Debug("[%s] Rendering %q as %v template", reqid(req), options.RequestedPath, tmpl.Engine())
 
 		if hdr := options.Header; hdr != nil {
 			// include any configured response headers now

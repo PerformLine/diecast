@@ -7,8 +7,8 @@ import (
 	"net/url"
 	"strings"
 
+	"github.com/PerformLine/go-clog/clog"
 	"github.com/PerformLine/go-stockutil/httputil"
-	"github.com/PerformLine/go-stockutil/log"
 	"github.com/PerformLine/go-stockutil/sliceutil"
 	"github.com/PerformLine/go-stockutil/typeutil"
 )
@@ -78,7 +78,7 @@ func (self *RequestAuthenticator) Authenticate(w http.ResponseWriter, req *http.
 		if addr, _, err := net.SplitHostPort(req.RemoteAddr); err == nil && addr != `` {
 			for i, remote := range self.remotes {
 				if addr == remote {
-					log.Debugf(
+					clog.Debug(
 						"[%s] request-auth: permitting address %v (in remote %d; exact match: %v)",
 						reqid(req),
 						addr,
@@ -89,7 +89,7 @@ func (self *RequestAuthenticator) Authenticate(w http.ResponseWriter, req *http.
 				} else if ipnet, ok := self.remoteNets[remote]; ok && ipnet != nil {
 					if ip := net.ParseIP(addr); ip != nil {
 						if ipnet.Contains(ip) {
-							log.Debugf(
+							clog.Debug(
 								"[%s] request-auth: permitting address %v (in remote %d; network: %v)",
 								reqid(req),
 								addr,

@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/PerformLine/go-clog/clog"
 	"github.com/PerformLine/go-stockutil/httputil"
 	"github.com/PerformLine/go-stockutil/log"
 	"github.com/PerformLine/go-stockutil/sliceutil"
@@ -177,7 +178,7 @@ func (self *StepConfig) logstep(format string, args ...interface{}) {
 			format = "\u2502          " + format
 		}
 
-		log.Debugf(format, args...)
+		clog.Debug(format, args...)
 	}
 }
 
@@ -223,7 +224,7 @@ func (self *Action) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 
 	prev.postprocess()
 
-	log.Debugf("\u256d Run action %s", name)
+	clog.Debug("\u256d Run action %s", name)
 
 	for i, step := range self.Steps {
 		step.index = i
@@ -256,5 +257,5 @@ func (self *Action) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		w.WriteHeader(http.StatusNoContent)
 	}
 
-	log.Debugf("\u2570 response sent (took: %v)", time.Since(started))
+	clog.Debug("\u2570 response sent (took: %v)", time.Since(started))
 }
