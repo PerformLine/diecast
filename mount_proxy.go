@@ -216,7 +216,7 @@ func (self *ProxyMount) openWithType(name string, req *http.Request, requestBody
 		if req != nil && (self.PassthroughRequests || self.PassthroughHeaders) {
 			for name, values := range req.Header {
 				for _, value := range values {
-					newReq.Header.Set(name, value)
+					newReq.Header.Add(name, value)
 				}
 			}
 
