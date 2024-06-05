@@ -3,6 +3,7 @@ package diecast
 import (
 	"bytes"
 	"crypto/x509"
+	"encoding/json"
 	"fmt"
 	"image"
 	"io"
@@ -105,6 +106,15 @@ func (self *Server) middlewareStartRequest(w http.ResponseWriter, req *http.Requ
 	httputil.RequestSetValue(req, ContextRequestKey, requestId)
 	w.Header().Set(`X-Diecast-Request-ID`, requestId)
 	req.Header.Add("X-Forwarded-For", req.RemoteAddr)
+
+	// TODO: DO NOT COMMIT
+	// This is for debugging today only.
+	rHeaders, _ := json.Marshal(req.Header)
+	wHeaders, _ := json.Marshal(w.Header)
+
+	log := clog.With("request", requestId)
+	log.With("Request Headers", rHeaders).Print("whitelist - Request Headers")
+	log.With("Response Headers", wHeaders).Print("whitelist - Response Headers")
 
 	// setup request tracing info
 	startRequestTimer(req)
