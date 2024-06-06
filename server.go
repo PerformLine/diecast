@@ -44,7 +44,6 @@ import (
 	"github.com/husobee/vestigo"
 	"github.com/mattn/go-shellwords"
 	opentracing "github.com/opentracing/opentracing-go"
-	"github.com/quic-go/quic-go/http3"
 	"github.com/signalsciences/tlstext"
 	"github.com/uber/jaeger-client-go"
 	jaegercfg "github.com/uber/jaeger-client-go/config"
@@ -347,7 +346,7 @@ func (self *Server) ShouldReturnSource(req *http.Request) bool {
 func (self *Server) LoadConfig(filename string) error {
 	if pathutil.FileExists(filename) {
 		if file, err := os.Open(filename); err == nil {
-			if data, err := ioutil.ReadAll(file); err == nil && len(data) > 0 {
+			if data, err := io.ReadAll(file); err == nil && len(data) > 0 {
 				data = []byte(stringutil.ExpandEnv(string(data)))
 
 				if err := yaml.UnmarshalStrict(data, self); err == nil {
@@ -655,7 +654,7 @@ func (self *Server) RenderPath(w io.Writer, path string) error {
 		_, err := io.Copy(w, res.Body)
 		return err
 	} else {
-		errbody, _ := ioutil.ReadAll(res.Body)
+		errbody, _ := io.ReadAll(res.Body)
 		return fmt.Errorf("render failed: %v", sliceutil.Or(string(errbody), res.Status))
 	}
 }
@@ -666,7 +665,6 @@ func (self *Server) RenderPath(w io.Writer, path string) error {
 func (self *Server) Serve(workers ...ServeFunc) error {
 	var serveable Serveable
 	var useTLS bool
-	var useUDP bool
 	var useSocket string
 
 	// fire off some goroutines for the prestart and start commands (if configured)
@@ -754,18 +752,6 @@ func (self *Server) Serve(workers ...ServeFunc) error {
 
 		serveable = srv
 
-	case `quic`, `http3`:
-		useUDP = true
-		var h3s = &http3.Server{
-			Addr:           srv.Addr,
-			TLSConfig:      srv.TLSConfig,
-			MaxHeaderBytes: srv.MaxHeaderBytes,
-			QuicConfig:     nil,
-		}
-
-		serveable = &h3serveable{
-			Server: h3s,
-		}
 	default:
 		return fmt.Errorf("unknown protocol %q", self.Protocol)
 	}
@@ -779,10 +765,6 @@ func (self *Server) Serve(workers ...ServeFunc) error {
 		}
 
 		var network = `unix`
-
-		if useUDP {
-			network = `unixpacket`
-		}
 
 		if _, err := os.Stat(useSocket); err == nil {
 			if err := os.Remove(useSocket); err != nil {
@@ -2014,7 +1996,7 @@ func (self *Server) tryMounts(requestPath string, req *http.Request) (Mount, *Mo
 	var body *bytes.Reader
 
 	// buffer the request body because we need to repeatedly pass it to multiple mounts
-	if data, err := ioutil.ReadAll(req.Body); err == nil {
+	if data, err := io.ReadAll(req.Body); err == nil {
 		if len(data) > 0 {
 			clog.Debug("[%s] process mounts: buffered %d bytes from request body", reqid(req), len(data))
 		}
@@ -2108,7 +2090,7 @@ func (self *Server) respondError(w http.ResponseWriter, req *http.Request, resEr
 }
 
 func SplitTemplateHeaderContent(reader io.Reader) (*TemplateHeader, []byte, error) {
-	if data, err := ioutil.ReadAll(reader); err == nil {
+	if data, err := io.ReadAll(reader); err == nil {
 		if bytes.HasPrefix(data, HeaderSeparator) {
 			var parts = bytes.SplitN(data, HeaderSeparator, 3)
 
@@ -2624,7 +2606,7 @@ func formatRequest(req *http.Request) string {
 		}
 	}
 
-	data, err := ioutil.ReadAll(req.Body)
+	data, err := io.ReadAll(req.Body)
 	req.Body.Close()
 
 	if err == nil {

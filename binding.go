@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"html"
 	"html/template"
-	"io/ioutil"
+	"io"
 	"mime"
 	"net"
 	"net/http"
@@ -390,7 +390,7 @@ func (self *Binding) Evaluate(req *http.Request, header *TemplateHeader, data ma
 				}
 			}
 
-			var data, err = ioutil.ReadAll(response)
+			var data, err = io.ReadAll(response)
 
 			if response.StatusCode >= 400 {
 				err = fmt.Errorf(string(data))

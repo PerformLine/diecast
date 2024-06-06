@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -330,7 +329,7 @@ func main() {
 					clog.SetGlobalLogger(clog.NopLogger())
 
 					if !c.IsSet(`log-level`) {
-						clog.SetLevel(clog.LogLevelWarning)
+						clog.SetLevel(clog.LogLevelWarn)
 					}
 				} else {
 					clog.Fatal("cannot allocate ephemeral port: %v", err)
@@ -478,7 +477,7 @@ func appendDataFile(data *maputil.Map, baseK string, filename string) {
 		case `.txt`:
 			var pM = maputil.M(nil)
 
-			if b, err := ioutil.ReadAll(file); err == nil {
+			if b, err := io.ReadAll(file); err == nil {
 				for _, line := range strings.Split(string(b), "\n") {
 					line = strings.TrimSpace(line)
 

@@ -1,9 +1,9 @@
-FROM golang:1.20.7-alpine3.18
+FROM golang:1.22.3-alpine3.20
 MAINTAINER Gary Hetzel <its@gary.cool>
 
 ENV GO111MODULE on
 RUN apk update && apk add --no-cache bash gcc g++ libsass-dev libsass ca-certificates curl wget make socat git jq
-RUN go get github.com/PerformLine/diecast/cmd/diecast@v1.18.5
+RUN go get github.com/PerformLine/diecast/cmd/diecast@v1.22.9
 RUN rm -rf /go/pkg /go/src
 RUN mv /go/bin/diecast /usr/bin/diecast
 ADD https://storage.googleapis.com/kubernetes-release/release/v1.18.3/bin/linux/amd64/kubectl /usr/bin/kubectl

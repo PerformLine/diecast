@@ -13,7 +13,7 @@ import "C"
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"path/filepath"
 	"sync"
@@ -43,7 +43,7 @@ func (self *SassRenderer) SetServer(server *Server) {
 func (self *SassRenderer) Render(w http.ResponseWriter, req *http.Request, options RenderOptions) error {
 	defer options.Input.Close()
 
-	if data, err := ioutil.ReadAll(options.Input); err == nil {
+	if data, err := io.ReadAll(options.Input); err == nil {
 		// setup Sass_Data_Context with the file contents we've been given
 		var dctx = C.sass_make_data_context(C.CString(string(data)))
 		defer C.sass_delete_data_context(dctx)
@@ -98,7 +98,7 @@ func (self *SassRenderer) Render(w http.ResponseWriter, req *http.Request, optio
 	// 	if file, err := self.server.fs.Open(url); err == nil {
 	// 		defer file.Close()
 
-	// 		if data, err := ioutil.ReadAll(file); err == nil {
+	// 		if data, err := io.ReadAll(file); err == nil {
 	// 			return url, string(data), true
 	// 		} else {
 	// 			clog.Warn("SassImport[%s]: %v", url, err)
@@ -133,7 +133,7 @@ func go_retrievePath(cookie unsafe.Pointer, url *C.char, output **C.char) C.int 
 					if file, err := renderer.server.fs.Open(candidate); err == nil {
 						defer file.Close()
 
-						if data, err := ioutil.ReadAll(file); err == nil {
+						if data, err := io.ReadAll(file); err == nil {
 							mesg = string(data)
 							code = len(data)
 							break
