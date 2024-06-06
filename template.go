@@ -5,7 +5,6 @@ import (
 	"fmt"
 	html "html/template"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"path"
 	"strings"
@@ -100,7 +99,7 @@ func (self *Template) Engine() Engine {
 }
 
 func (self *Template) ParseFrom(r io.Reader) error {
-	if data, err := ioutil.ReadAll(r); err == nil {
+	if data, err := io.ReadAll(r); err == nil {
 		return self.ParseString(string(data))
 	} else {
 		return err

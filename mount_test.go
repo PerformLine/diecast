@@ -2,7 +2,7 @@ package diecast
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"os"
 	"testing"
@@ -77,7 +77,7 @@ func TestMounts(t *testing.T) {
 	file, err = mount.Open(`/js/bootstrap.min.js`)
 	assert.Nil(err)
 
-	data, err = ioutil.ReadAll(file)
+	data, err = io.ReadAll(file)
 	assert.Nil(err)
 	assert.NotEmpty(data)
 	assert.Contains(string(data[:]), `Bootstrap`)

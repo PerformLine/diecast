@@ -7,7 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"html/template"
-	"io/ioutil"
+	"io"
 	"math"
 	"net/http"
 	"os"
@@ -793,7 +793,7 @@ func toBytes(input interface{}) []byte {
 func readFromFS(fs http.FileSystem, filename string) ([]byte, error) {
 	if file, err := fs.Open(filename); err == nil {
 		defer file.Close()
-		return ioutil.ReadAll(file)
+		return io.ReadAll(file)
 	} else {
 		return nil, err
 	}

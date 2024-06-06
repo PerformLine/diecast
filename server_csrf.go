@@ -97,7 +97,7 @@ func (self *CSRF) Handle(w http.ResponseWriter, req *http.Request) bool {
 				var creq = req.Clone(req.Context())
 
 				if req.Body != nil {
-					if body, err := ioutil.ReadAll(req.Body); err == nil {
+					if body, err := io.ReadAll(req.Body); err == nil {
 						req.Body.Close()
 						creq.Body = ioutil.NopCloser(bytes.NewBuffer(body))
 						req.Body = ioutil.NopCloser(bytes.NewBuffer(body))

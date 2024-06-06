@@ -5,7 +5,6 @@ import (
 	"crypto/tls"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
@@ -408,7 +407,7 @@ func (self *ProxyMount) openWithType(name string, req *http.Request, requestBody
 				return nil, err
 			}
 
-			if data, err := ioutil.ReadAll(responseBody); err == nil {
+			if data, err := io.ReadAll(responseBody); err == nil {
 				var payload = bytes.NewReader(data)
 
 				// correct the length, which is now potentially decompressed and longer
@@ -429,7 +428,7 @@ func (self *ProxyMount) openWithType(name string, req *http.Request, requestBody
 			}
 		}
 
-		if data, err := ioutil.ReadAll(response.Body); err == nil {
+		if data, err := io.ReadAll(response.Body); err == nil {
 			for _, line := range stringutil.SplitLines(data, "\n") {
 				clog.Debug("[%s] proxy: [B] %s", id, line)
 			}

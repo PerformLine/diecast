@@ -2,7 +2,7 @@ package diecast
 
 import (
 	"bytes"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -134,7 +134,7 @@ func TestCsrfPostValidRequestBodyIntact(t *testing.T) {
 	assert.True(csrf.Handle(w, req))
 	assert.Equal(http.StatusOK, w.Code)
 
-	reqbody, err := ioutil.ReadAll(req.Body)
+	reqbody, err := io.ReadAll(req.Body)
 	assert.NoError(err)
 
 	// the request body should still contain everything it had
