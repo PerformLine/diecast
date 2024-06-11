@@ -4,7 +4,13 @@
 GO111MODULE ?= on
 LOCALS      := $(shell find . -type f -name '*.go')
 BIN         ?= diecast-$(shell go env GOOS)-$(shell go env GOARCH)
-VERSION      = $(shell grep 'const ApplicationVersion' version.go | cut -d= -f2 | tr -d '`' | tr -d ' ')
+BUILD_VERSION         ?= `git describe --tags --always`
+BUILD_COMMIT          ?= `git rev-parse --short HEAD`
+BUILT_AT              ?= `date +%FT%T%z`
+BUILT_BY              ?= ${USER}
+BUILT_ON              ?= `hostname`
+BUILD_BRANCH          ?= `git rev-parse --abbrev-ref HEAD`
+BUILD_PATH            ?= "github.com/PerformLine/go-performline-stdlib/build"
 
 all: deps test build docs
 
@@ -35,9 +41,9 @@ favicon.go:
 	@gofmt -w favicon.go
 
 build: fmt
-	go build --ldflags '-extldflags "-static"' -installsuffix cgo -ldflags '-s' -o bin/$(BIN) cmd/diecast/main.go
-	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build --ldflags '-extldflags "-static"' -installsuffix cgo -ldflags '-s' -o bin/$(BIN)-nocgo cmd/diecast/main.go
-	GOOS=darwin go build --ldflags '-extldflags "-static"' -installsuffix cgo -ldflags '-s' -o bin/diecast-darwin-amd64 cmd/diecast/main.go
+	go build --ldflags '-extldflags "-static"' -installsuffix cgo -ldflags "-s -X $(BUILD_PATH).Version=$(BUILD_VERSION) -X $(BUILD_PATH).Branch=$(BUILD_BRANCH) -X $(BUILD_PATH).Commit=$(BUILD_COMMIT) -X $(BUILD_PATH).Date=$(BUILT_AT) -X $(BUILD_PATH).User=$(BUILT_BY) -X $(BUILD_PATH).Host=$(BUILT_ON) " -o bin/$(BIN) cmd/diecast/main.go
+	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build --ldflags '-extldflags "-static"' -installsuffix cgo -ldflags "-s -X $(BUILD_PATH).Version=$(BUILD_VERSION) -X $(BUILD_PATH).Branch=$(BUILD_BRANCH) -X $(BUILD_PATH).Commit=$(BUILD_COMMIT) -X $(BUILD_PATH).Date=$(BUILT_AT) -X $(BUILD_PATH).User=$(BUILT_BY) -X $(BUILD_PATH).Host=$(BUILT_ON) " -o bin/$(BIN)-nocgo cmd/diecast/main.go
+	GOOS=darwin go build --ldflags '-extldflags "-static"' -installsuffix cgo -ldflags "-s -X $(BUILD_PATH).Version=$(BUILD_VERSION) -X $(BUILD_PATH).Branch=$(BUILD_BRANCH) -X $(BUILD_PATH).Commit=$(BUILD_COMMIT) -X $(BUILD_PATH).Date=$(BUILT_AT) -X $(BUILD_PATH).User=$(BUILT_BY) -X $(BUILD_PATH).Host=$(BUILT_ON) " -o bin/diecast-darwin-amd64 cmd/diecast/main.go
 	which diecast && cp -v bin/$(BIN) $(shell which diecast) || true
 
 docs:

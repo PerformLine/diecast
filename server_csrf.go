@@ -319,7 +319,9 @@ func (self *Server) middlewareCsrf(w http.ResponseWriter, req *http.Request) boo
 							clog.Debug("[%s] injecting form field", reqid(req))
 
 							var start = time.Now()
-							defer reqtime(req, `csrf-inject`, time.Since(start))
+							defer func(start time.Time) {
+								reqtime(req, `csrf-inject`, time.Since(start))
+							}(start)
 
 							if doc, err := htmldoc(in); err == nil {
 								doc.Find(csrf.InjectFormFieldSelector).Each(func(i int, form *goquery.Selection) {
