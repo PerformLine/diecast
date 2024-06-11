@@ -13,6 +13,7 @@ import (
 
 	"github.com/PerformLine/diecast"
 	"github.com/PerformLine/go-clog/clog"
+	"github.com/PerformLine/go-performline-stdlib/build"
 	"github.com/PerformLine/go-stockutil/maputil"
 	"github.com/PerformLine/go-stockutil/netutil"
 	"github.com/PerformLine/go-stockutil/sliceutil"
@@ -25,6 +26,8 @@ import (
 var serviceName = diecast.ApplicationName
 
 func main() {
+	build.Init()
+
 	logLevel := clog.LogLevelInfo
 	logFormat := clog.FormatJSON
 
@@ -39,6 +42,13 @@ func main() {
 
 	logger := clog.MustNewLogger(logLevel, logFormat)
 	clog.SetGlobalLogger(logger.WithName(serviceName))
+	clog.With("version", build.Version).
+		With("commit", build.Commit).
+		With("user", build.User).
+		With("date", build.Date).
+		With("host", build.Host).
+		With("branch", build.Branch).
+		Print("Starting service " + serviceName)
 
 	var app = cli.NewApp()
 	app.Name = diecast.ApplicationName

@@ -12,7 +12,6 @@ import (
 var renderers = make(map[string]Renderer)
 
 func init() {
-	RegisterRenderer(`pdf`, new(PdfRenderer))
 	RegisterRenderer(`markdown`, new(MarkdownRenderer))
 	RegisterRenderer(`sass`, new(SassRenderer))
 	RegisterRenderer(`html`, new(TemplateRenderer))
