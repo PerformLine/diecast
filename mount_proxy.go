@@ -400,9 +400,6 @@ func (self *ProxyMount) openWithType(name string, req *http.Request, requestBody
 
 			if body, err := httputil.DecodeResponse(response); err == nil {
 				responseBody = body
-
-				// whatever the encoding was before, it's definitely "identity" now
-				response.Header.Set(`Content-Encoding`, `identity`)
 			} else {
 				return nil, err
 			}
